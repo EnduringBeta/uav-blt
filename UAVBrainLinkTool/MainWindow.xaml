@@ -1,0 +1,29 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:UAVBrainLinkTool" x:Class="UAVBrainLinkTool.MainWindow"
+        Title="UAV Brain Link Tool" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <Grid>
+        <Grid Margin="384,10,10,151">
+            <Button x:Name="ButtonPush" Content="Push" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonPush_Click"/>
+            <Button x:Name="ButtonPull" Content="Pull" HorizontalAlignment="Left" Margin="0,55,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonPull_Click"/>
+            <Button x:Name="ButtonNeutral" Content="Neutral" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonNeutral_Click"/>
+        </Grid>
+        <Canvas HorizontalAlignment="Left" Height="240" Margin="10,10,0,0" VerticalAlignment="Top" Width="240">
+            <Canvas.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF818181" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Canvas.Background>
+        </Canvas>
+        <TextBlock x:Name="TextBlockUsername" HorizontalAlignment="Left" Margin="309,223,0,0" TextWrapping="Wrap" Text="[Username]" VerticalAlignment="Top" FontSize="20" Width="200" TextAlignment="Center" Background="#FFC8C8C8"/>
+        <TextBlock x:Name="TextBlockProfile" HorizontalAlignment="Left" Margin="309,284,0,0" TextWrapping="Wrap" Text="[Profile]" VerticalAlignment="Top" FontSize="20" Width="200" TextAlignment="Center" Background="#FFC8C8C8"/>
+        <Button x:Name="ButtonListen" Content="Start Listening" HorizontalAlignment="Left" Margin="10,261,0,0" VerticalAlignment="Top" Width="240" Height="50" FontSize="24" IsDefault="True" ToolTip="Start listening and processing Emotiv events" Click="ButtonListen_Click"/>
+        <Label x:Name="LabelUsername" Content="Emotiv Username" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="309,197,0,0"/>
+        <Label x:Name="LabelProfile" Content="Emotiv Profile" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="309,258,0,0"/>
+        <TextBlock x:Name="TextBlockCurrentCommand" HorizontalAlignment="Left" Margin="255,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Width="124" TextAlignment="Center" Background="#FFC8C8C8" Height="60"
+                   Text="{Binding Path=(local:EmotivDeviceComms.ActiveCommandsText)}">
+        </TextBlock>
+    </Grid>
+</Window>
