@@ -19,6 +19,7 @@ namespace UAVBrainLinkTool
                 handler(null, new PropertyChangedEventArgs(propertyName));
         }
 
+        // TODO: Put into config file
         private static Single activeCommandThreshold = 11;
         public static Single ActiveCommandThreshold
         {
@@ -32,6 +33,7 @@ namespace UAVBrainLinkTool
             }
         }
 
+        // TODO: Put into config file
         private static Single inactiveCommandThreshold = 9;
         public static Single InactiveCommandThreshold
         {
@@ -71,6 +73,19 @@ namespace UAVBrainLinkTool
             }
         }
 
+        private static Single latestSampleTime = 0; // Seconds
+        public static Single LatestSampleTime
+        {
+            get
+            {
+                return latestSampleTime;
+            }
+            private set
+            {
+                latestSampleTime = value;
+            }
+        }
+
         public class CommandObject
         {
             public EdkDll.IEE_MentalCommandAction_t command;
@@ -87,12 +102,24 @@ namespace UAVBrainLinkTool
                 isActive = inputIsActive;
             }
 
-            // TODO: Confirm newSampleTime is in seconds, not milliseconds
+            public Boolean resetPower()
+            {
+                power = 0;
+                updateActive();
+
+                return true;
+            }
+
             // "newSamplePower" is used when sample is for this command. Otherwise it does nothing.
             public Boolean addNewSample(Single newSampleTime, Single newSamplePower = 0)
             {
-                power = calcPowerDecrease(newSampleTime - latestSample) * power + newSamplePower;
-                latestSample = newSampleTime;
+                power = calcPowerDecrease(newSampleTime - LatestSampleTime) * power + newSamplePower;
+
+                // Only update latestSample if this command's sample
+                if (newSamplePower > 0)
+                {
+                    latestSample = newSampleTime;
+                }
 
                 updateActive();
 
@@ -101,8 +128,11 @@ namespace UAVBrainLinkTool
 
             private Single calcPowerDecrease(Single timeDelta)
             {
+                if (timeDelta <= 0)
+                    Logging.outputLine("Warning: time not increasing linearly! Check for relativity issues.");
+
                 // Using linear function that is 1 at 0s and 0 at 3s
-                Single result = -1 / SampleTimeWindow * timeDelta + 1;
+                Single result = (-1 / SampleTimeWindow) * timeDelta + 1;
 
                 // Return calculated result, minimum 0
                 return result > 0 ? result : 0;
@@ -119,29 +149,59 @@ namespace UAVBrainLinkTool
             }
         }
 
+        // This version is called when a command event occurs
         public static Boolean updateCommandObjects(Single timeFromStart, EdkDll.IEE_MentalCommandAction_t cogAction, Single power, Boolean isActive)
         {
-            Boolean foundCommand = false;
-            foreach (CommandObject cmdObj in CommandObjectList)
+            // If command is MC_NEUTRAL, reset command cumulative powers and do not add to CommandObjectList
+            if (String.Compare(cogAction.ToString(), Constants.cmdNeutral) == 0)
             {
-                // If command object matches the current sample
-                if (String.Compare(cmdObj.command.ToString(), cogAction.ToString()) == 0)
+                foreach (CommandObject cmdObj in CommandObjectList)
                 {
-                    // Add its power while decreasing existing power
-                    cmdObj.addNewSample(timeFromStart, power);
-                    foundCommand = true;
-                }
-                // If command object does not match the current sample
-                else
-                {
-                    // Decrease existing power
-                    cmdObj.addNewSample(timeFromStart);
+                    cmdObj.resetPower();
                 }
             }
+            // If command is anything else, update all command objects appropriately
+            else
+            {
+                Boolean foundCommand = false;
+                foreach (CommandObject cmdObj in CommandObjectList)
+                {
+                    // If command object matches the current sample
+                    if (String.Compare(cmdObj.command.ToString(), cogAction.ToString()) == 0)
+                    {
+                        // Add its power while decreasing existing power
+                        cmdObj.addNewSample(timeFromStart, power);
+                        foundCommand = true;
+                    }
+                    // If command object does not match the current sample
+                    else
+                    {
+                        // Decrease existing power
+                        cmdObj.addNewSample(timeFromStart);
+                    }
+                }
 
-            if (!foundCommand)
-                // "isActive" from device used differently than "isActive" in this program
-                CommandObjectList.Add(new CommandObject(cogAction, power, timeFromStart));
+                // If command object is new and not empty
+                if (!foundCommand)
+                    // "isActive" from device used differently than "isActive" in this program
+                    CommandObjectList.Add(new CommandObject(cogAction, power, timeFromStart));
+            }
+
+            // Always update LatestSampleTime after processing
+            LatestSampleTime = timeFromStart;
+
+            return true;
+        }
+
+        // This version is called when not triggered by a command event
+        public static Boolean updateCommandObjects(Single timeFromStart)
+        {
+            // Decrease existing power from passage of time
+            foreach (CommandObject cmdObj in CommandObjectList)
+                cmdObj.addNewSample(timeFromStart);
+
+            // Always update LatestSampleTime after processing
+            LatestSampleTime = timeFromStart;
 
             return true;
         }
@@ -161,7 +221,7 @@ namespace UAVBrainLinkTool
         {
             foreach (CommandObject cmdObj in CommandObjectList)
             {
-                Logging.outputLine(String.Format("{0}:\t{1}\t{2}", cmdObj.command, cmdObj.power, cmdObj.isActive));
+                Logging.outputLine(String.Format("Command power:\t{0,15}\t{1,10:N2}\t\t\t\t{2,8}", cmdObj.command, cmdObj.power, cmdObj.isActive ? "Active" : "Inactive"));
             }
 
             return true;

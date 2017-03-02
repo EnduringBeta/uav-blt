@@ -23,5 +23,18 @@ namespace UAVBrainLinkTool
         public const String dateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
 
         public const String noActiveCommands = "No Active Commands";
+
+        public const String cmdNeutral  = "MC_NEUTRAL";
+        public const String cmdPush     = "MC_PUSH";
+        public const String cmdPull     = "MC_PULL";
+        public const String cmdRaise    = "MC_RAISE"; // TODO: Confirm correct string
+        public const String cmdLower    = "MC_LOWER"; // TODO: Confirm correct string
+
+        public const String cmdTargetSelect = "BLT_TARGETSELECT";
+        public const String cmdFollow       = "BLT_FOLLOW";
+        public const String cmdTakeOff      = "BLT_TAKEOFF";
+        public const String cmdLand         = "BLT_LAND";
+
+        public const Single millisecondsInSeconds = 1000;
     }
 }

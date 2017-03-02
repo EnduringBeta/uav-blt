@@ -16,8 +16,9 @@ namespace UAVBrainLinkTool
         static EmoEngine engine;
         static System.Timers.Timer listenTimer = null;
 
-        const int listeningMillisecondInterval = 100; // Check for events 10 times per second
-        const int eventProcessingTime = 50;
+        const int commandPowerPrintingPeriod = 5; // Print cumulative command powers once per second
+        const Single listeningMillisecondInterval = 200; // Check for events 5 times per second
+        const int eventMillisecondProcessingTime = 100;
 
         // http://stackoverflow.com/questions/34762879/static-binding-doesnt-update-when-resource-changes
         public static event PropertyChangedEventHandler StaticPropertyChanged;
@@ -67,6 +68,20 @@ namespace UAVBrainLinkTool
             {
                 totalListeningTicks = value;
                 OnStaticPropertyChanged("TotalListeningTicks");
+            }
+        }
+
+        private static int eventsProcessedThisInterval = 0;
+        public static int EventsProcessedThisInterval
+        {
+            get
+            {
+                return eventsProcessedThisInterval;
+            }
+            set
+            {
+                eventsProcessedThisInterval = value;
+                OnStaticPropertyChanged("EventsProcessedThisInterval");
             }
         }
 
@@ -161,12 +176,15 @@ namespace UAVBrainLinkTool
             }
 
             ListeningMillisecondLength = millisecondLength;
+            TotalListeningTicks = 0;
 
             if (listenTimer == null)
                 setupTimer();
 
             IsListening = true;
             Logging.outputLine("Listening...");
+
+            Logging.outputLine(String.Format("[Event]:\t\t{0,15}\t{1,10}\t{2,10}\t{3,8}", "[Command]", "[Power]", "[Seconds]", "[Active?]"));
 
             listenTimer.Start();
 
@@ -186,6 +204,8 @@ namespace UAVBrainLinkTool
             IsListening = false;
             Logging.outputLine("Stopped listening.");
 
+            ActiveCommandsText = Constants.noActiveCommands;
+
             return true;
         }
 
@@ -200,10 +220,24 @@ namespace UAVBrainLinkTool
 
         private static void listenTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            EventsProcessedThisInterval = 0;
+
             // Process any raw events from device
-            engine.ProcessEvents(eventProcessingTime);
+            engine.ProcessEvents(eventMillisecondProcessingTime);
             // Increment counter tracking time
             TotalListeningTicks++;
+
+            // If no events were processed
+            if (EventsProcessedThisInterval == 0)
+            {
+                // Decay command power by listeningMillisecondInterval
+                CommandProcessing.updateCommandObjects(CommandProcessing.LatestSampleTime
+                    + (listeningMillisecondInterval / Constants.millisecondsInSeconds));
+            }
+
+            // Print out cumulative command powers occasionally
+            if ((TotalListeningTicks % commandPowerPrintingPeriod) == 0)
+                CommandProcessing.printCommandPowers();
 
             // Get list of commands that have exceeded threshold and are active
             List<CommandProcessing.CommandObject> activeCommands =  CommandProcessing.getActiveCommands();
@@ -219,7 +253,7 @@ namespace UAVBrainLinkTool
                 if (String.Compare(commandsString, "") == 0)
                     commandsString += atvCmd.command.ToString();
                 else
-                    commandsString += Constants.lineBreak + atvCmd.command.ToString();
+                    commandsString += ", " + atvCmd.command.ToString();
             }
 
             // Update UI

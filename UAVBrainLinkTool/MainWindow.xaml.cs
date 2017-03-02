@@ -56,21 +56,26 @@ namespace UAVBrainLinkTool
 
         private void ButtonPush_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.sendCommand("Push", CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = "Push";
+            CommandComms.sendCommand(Constants.cmdPush, CommandProcessing.ActiveCommandThreshold);
+            EmotivDeviceComms.ActiveCommandsText = Constants.cmdPush;
         }
 
         private void ButtonPull_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.sendCommand("Pull", CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = "Pull";
+            CommandComms.sendCommand(Constants.cmdPull, CommandProcessing.ActiveCommandThreshold);
+            EmotivDeviceComms.ActiveCommandsText = Constants.cmdPull;
         }
 
-        private void ButtonNeutral_Click(object sender, RoutedEventArgs e)
+        private void ButtonRaise_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.sendCommand("Neutral", CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = Constants.noActiveCommands;
-            CommandProcessing.printCommandPowers();
+            CommandComms.sendCommand(Constants.cmdRaise, CommandProcessing.ActiveCommandThreshold);
+            EmotivDeviceComms.ActiveCommandsText = Constants.cmdRaise;
+        }
+
+        private void ButtonLower_Click(object sender, RoutedEventArgs e)
+        {
+            CommandComms.sendCommand(Constants.cmdLower, CommandProcessing.ActiveCommandThreshold);
+            EmotivDeviceComms.ActiveCommandsText = Constants.cmdLower;
         }
     }
 }
