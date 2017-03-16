@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OxyPlot;
+using OxyPlot.Series;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,9 @@ namespace UAVBrainLinkTool
     {
         public MainWindow()
         {
+            // Initialize plot before referencing it in XAML
+            Plotting.initPlot();
+
             InitializeComponent();
 
             EmotivDeviceComms.initialize();
@@ -41,6 +46,12 @@ namespace UAVBrainLinkTool
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
         {
+            List<DataPoint> plotDP = new List<DataPoint>();
+            plotDP.Add(new DataPoint(1.0, 2.0));
+            Plotting.addPlotData(plotDP, Constants.cmdNeutral);
+
+            Plotting.CommandPlotModel.InvalidatePlot(true); // DEBUG
+
             // TODO: Clear other active UI elements when stopped?
             if (EmotivDeviceComms.IsListening)
             {

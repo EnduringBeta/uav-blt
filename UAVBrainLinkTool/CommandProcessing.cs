@@ -1,4 +1,5 @@
 ﻿using Emotiv;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -113,6 +114,13 @@ namespace UAVBrainLinkTool
             // "newSamplePower" is used when sample is for this command. Otherwise it does nothing.
             public Boolean addNewSample(Single newSampleTime, Single newSamplePower = 0)
             {
+                // Skip sample if (presumably) received out of order
+                if (LatestSampleTime > newSampleTime)
+                {
+                    Logging.outputLine("Warning: time not increasing linearly! Check for relativity issues.");
+                    return false;
+                }
+
                 power = calcPowerDecrease(newSampleTime - LatestSampleTime) * power + newSamplePower;
 
                 // Only update latestSample if this command's sample
@@ -121,6 +129,11 @@ namespace UAVBrainLinkTool
                     latestSample = newSampleTime;
                 }
 
+                // Update UI plot for appropriate command
+                List<DataPoint> plotDP = new List<DataPoint>();
+                plotDP.Add(new DataPoint((double)newSampleTime, (double)power));
+                Plotting.addPlotData(plotDP, this.command.ToString());
+
                 updateActive();
 
                 return true;
@@ -128,9 +141,6 @@ namespace UAVBrainLinkTool
 
             private Single calcPowerDecrease(Single timeDelta)
             {
-                if (timeDelta <= 0)
-                    Logging.outputLine("Warning: time not increasing linearly! Check for relativity issues.");
-
                 // Using linear function that is 1 at 0s and 0 at 3s
                 Single result = (-1 / SampleTimeWindow) * timeDelta + 1;
 
