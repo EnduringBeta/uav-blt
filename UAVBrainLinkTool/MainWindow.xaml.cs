@@ -29,39 +29,39 @@ namespace UAVBrainLinkTool
 
             InitializeComponent();
 
-            EmotivDeviceComms.initialize();
-            EmotivServerComms.initialize();
+            // Color the command buttons!
+            ButtonPush.Background = Constants.colorButtonCmdPush;
+            ButtonPull.Background = Constants.colorButtonCmdPull;
+            ButtonRaise.Background = Constants.colorButtonCmdRaise;
+            ButtonLower.Background = Constants.colorButtonCmdLower;
 
-            // TODO: Eventually this information will be taken from a file or entered in.
-            TextBlockUsername.Text = Constants.userName;
-            TextBlockProfile.Text = Constants.profileName;
+            enableButtons(false);
+        }
 
-            EmotivDeviceComms.hookEvents();
-            EmotivDeviceComms.connectToDevice();
+        // Disable buttons while loading
+        private Boolean enableButtons(Boolean enable = true)
+        {
+            ButtonPush.IsEnabled   = enable;
+            ButtonPull.IsEnabled   = enable;
+            ButtonRaise.IsEnabled  = enable;
+            ButtonLower.IsEnabled  = enable;
+            ButtonListen.IsEnabled = enable;
 
-            // TODO: If information not available, prompt user
-            EmotivServerComms.logIn(Constants.userName, Constants.password);
-            EmotivServerComms.loadUserProfile(Constants.profileName);
+            return true;
         }
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
         {
-            List<DataPoint> plotDP = new List<DataPoint>();
-            plotDP.Add(new DataPoint(1.0, 2.0));
-            Plotting.addPlotData(plotDP, Constants.cmdNeutral);
-
-            Plotting.CommandPlotModel.InvalidatePlot(true); // DEBUG
-
             // TODO: Clear other active UI elements when stopped?
             if (EmotivDeviceComms.IsListening)
             {
                 EmotivDeviceComms.stopListening();
-                ButtonListen.Content = "Start Listening";
+                ButtonListen.Content = Constants.startListening;
             }
             else
             {
                 EmotivDeviceComms.startListening();
-                ButtonListen.Content = "Stop Listening";
+                ButtonListen.Content = Constants.stopListening;
             }
         }
 
@@ -87,6 +87,27 @@ namespace UAVBrainLinkTool
         {
             CommandComms.sendCommand(Constants.cmdLower, CommandProcessing.ActiveCommandThreshold);
             EmotivDeviceComms.ActiveCommandsText = Constants.cmdLower;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            EmotivDeviceComms.initialize();
+            EmotivServerComms.initialize();
+
+            EmotivDeviceComms.hookEvents();
+            EmotivDeviceComms.connectToDevice();
+
+            // TODO: Eventually this information will be taken from a file or entered in.
+            TextBlockUsername.Text = Constants.userName;
+            TextBlockProfile.Text = Constants.profileName;
+
+            // TODO: If information not available, prompt user
+            EmotivServerComms.logIn(Constants.userName, Constants.password);
+            EmotivServerComms.loadUserProfile(Constants.profileName);
+
+            ButtonListen.Content = Constants.startListening;
+
+            enableButtons();
         }
     }
 }
