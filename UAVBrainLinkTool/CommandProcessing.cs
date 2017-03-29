@@ -20,33 +20,9 @@ namespace UAVBrainLinkTool
                 handler(null, new PropertyChangedEventArgs(propertyName));
         }
 
-        // TODO: Put into config file
-        private static Single activeCommandThreshold = 11;
-        public static Single ActiveCommandThreshold
-        {
-            get
-            {
-                return activeCommandThreshold;
-            }
-            private set
-            {
-                activeCommandThreshold = value;
-            }
-        }
-
-        // TODO: Put into config file
-        private static Single inactiveCommandThreshold = 9;
-        public static Single InactiveCommandThreshold
-        {
-            get
-            {
-                return inactiveCommandThreshold;
-            }
-            private set
-            {
-                inactiveCommandThreshold = value;
-            }
-        }
+        // Set in config file
+        public static Single ActiveCommandThreshold { get; set; }
+        public static Single InactiveCommandThreshold { get; set; }
 
         private static Single sampleTimeWindow = 3; // Seconds
         public static Single SampleTimeWindow
@@ -92,21 +68,21 @@ namespace UAVBrainLinkTool
             public EdkDll.IEE_MentalCommandAction_t command;
             public Single power = 0;
             public Single latestSample = 0;
-            public Boolean isActive = false;
+            public Boolean exceedsThreshold = false;
 
-            public CommandObject(EdkDll.IEE_MentalCommandAction_t inputCommand, Single inputPower = 0, Single inputLatestSample = 0, Boolean inputIsActive = false)
+            public CommandObject(EdkDll.IEE_MentalCommandAction_t inputCommand, Single inputPower = 0, Single inputLatestSample = 0, Boolean inputExceedsThreshold = false)
             {
                 command = inputCommand;
 
                 power = inputPower;
                 latestSample = inputLatestSample;
-                isActive = inputIsActive;
+                exceedsThreshold = inputExceedsThreshold;
             }
 
             public Boolean resetPower()
             {
                 power = 0;
-                updateActive();
+                updateExceedsThreshold();
 
                 return true;
             }
@@ -117,6 +93,7 @@ namespace UAVBrainLinkTool
                 // Skip sample if (presumably) received out of order
                 if (LatestSampleTime > newSampleTime)
                 {
+                    // NOTE: Occasionally occurs when samples received out of order
                     Logging.outputLine("Warning: time not increasing linearly! Check for relativity issues.");
                     return false;
                 }
@@ -134,7 +111,7 @@ namespace UAVBrainLinkTool
                 plotDP.Add(new DataPoint((double)newSampleTime, (double)power));
                 Plotting.addPlotData(plotDP, this.command.ToString());
 
-                updateActive();
+                updateExceedsThreshold();
 
                 return true;
             }
@@ -148,19 +125,19 @@ namespace UAVBrainLinkTool
                 return result > 0 ? result : 0;
             }
 
-            private Boolean updateActive()
+            private Boolean updateExceedsThreshold()
             {
-                if (power > ActiveCommandThreshold)
-                    isActive = true;
-                else if (power < InactiveCommandThreshold)
-                    isActive = false;
+                if (power < InactiveCommandThreshold)
+                    exceedsThreshold = false;
+                else if (power > ActiveCommandThreshold)
+                    exceedsThreshold = true;
 
                 return true;
             }
         }
 
         // This version is called when a command event occurs
-        public static Boolean updateCommandObjects(Single timeFromStart, EdkDll.IEE_MentalCommandAction_t cogAction, Single power, Boolean isActive)
+        public static Boolean updateCommandObjects(Single timeFromStart, EdkDll.IEE_MentalCommandAction_t cogAction, Single power, Boolean exceedsThreshold)
         {
             // If command is MC_NEUTRAL, reset command cumulative powers and do not add to CommandObjectList
             if (String.Compare(cogAction.ToString(), Constants.cmdNeutral) == 0)
@@ -193,7 +170,7 @@ namespace UAVBrainLinkTool
 
                 // If command object is new and not empty
                 if (!foundCommand)
-                    // "isActive" from device used differently than "isActive" in this program
+                    // "exceedsThreshold" from device used differently than "exceedsThreshold" in this program
                     CommandObjectList.Add(new CommandObject(cogAction, power, timeFromStart));
             }
 
@@ -221,7 +198,7 @@ namespace UAVBrainLinkTool
             List<CommandObject> activeCommandList = new List<CommandObject>();
 
             foreach (CommandObject cmdObj in CommandObjectList)
-                if (cmdObj.isActive)
+                if (cmdObj.exceedsThreshold)
                     activeCommandList.Add(cmdObj);
 
             return activeCommandList;
@@ -231,7 +208,7 @@ namespace UAVBrainLinkTool
         {
             foreach (CommandObject cmdObj in CommandObjectList)
             {
-                Logging.outputLine(String.Format("Command power:\t{0,15}\t{1,10:N2}\t\t\t\t{2,8}", cmdObj.command, cmdObj.power, cmdObj.isActive ? "Active" : "Inactive"));
+                Logging.outputLine(String.Format("Command power:\t{0,15}\t{1,10:N2}\t\t\t\t{2,8}", cmdObj.command, cmdObj.power, cmdObj.exceedsThreshold ? "Active" : "Inactive"));
             }
 
             return true;

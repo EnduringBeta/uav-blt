@@ -22,8 +22,15 @@ namespace UAVBrainLinkTool
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Boolean configLoaded = false;
+
         public MainWindow()
         {
+            // Load config file first for necessary plot info
+            configLoaded = Config.importConfig();
+            if (!configLoaded)
+                Logging.outputLine("Error: failure when reading configuration file!");
+
             // Initialize plot before referencing it in XAML
             Plotting.initPlot();
 
@@ -97,17 +104,21 @@ namespace UAVBrainLinkTool
             EmotivDeviceComms.hookEvents();
             EmotivDeviceComms.connectToDevice();
 
-            // TODO: Eventually this information will be taken from a file or entered in.
-            TextBlockUsername.Text = Constants.userName;
-            TextBlockProfile.Text = Constants.profileName;
+            if (configLoaded)
+            {
+                TextBlockUsername.Text = Config.UserName;
+                TextBlockProfile.Text = Config.ProfileName;
 
-            // TODO: If information not available, prompt user
-            EmotivServerComms.logIn(Constants.userName, Constants.password);
-            EmotivServerComms.loadUserProfile(Constants.profileName);
+                CommandComms.initCommandComms();
 
-            ButtonListen.Content = Constants.startListening;
+                // TODO: If information not available, prompt user
+                EmotivServerComms.logIn(Config.UserName, Config.Password);
+                EmotivServerComms.loadUserProfile(Config.ProfileName);
 
-            enableButtons();
+                ButtonListen.Content = Constants.startListening;
+
+                enableButtons();
+            }
         }
     }
 }
