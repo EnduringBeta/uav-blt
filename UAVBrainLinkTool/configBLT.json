@@ -1,0 +1,20 @@
+{
+    "_comment": "Configuration file for the UAV Brain Link Tool (BLT)",
+    "commandScripts": {
+        "_comment": "Python scripts to execute specific mental commands",
+        "MC_PUSH": "UAVControlPython/simple_goto.py",
+        "MC_PULL": "UAVControlPython/test_takeoff.py",
+        "MC_RAISE": "UAVControlPython/test_takeoff.py",
+        "MC_LOWER": "UAVControlPython/simple_goto.py"
+    },
+    "userInfo": {
+        "_comment": "User information for obtaining profile information and logging into Emotiv",
+        "userName": "",
+        "password": "",
+        "profileName": ""
+    },
+    "commandThresholds": {
+        "activeCommandThreshold": 11,
+        "inactiveCommandThreshold": 9
+    }
+}
