@@ -9,11 +9,12 @@
     },
     "userInfo": {
         "_comment": "User information for obtaining profile information and logging into Emotiv",
-        "userName": "",
-        "password": "",
-        "profileName": ""
+        "userName": "rossllewallyn",
+        "password": "Bxq^VX!nOv23",
+        "profileName": "My Profile"
     },
     "commandThresholds": {
+        "_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
         "activeCommandThreshold": 11,
         "inactiveCommandThreshold": 9
     }
