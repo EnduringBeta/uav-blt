@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UAVBrainLinkTool", "UAVBrainLinkTool\UAVBrainLinkTool.csproj", "{5C937341-810F-498A-B5A9-0966AE3B42CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetEmotivSDK", "..\community-sdk\examples_basic\C#\DotNetEmotivSDK\DotNetEmotivSDK.csproj", "{D3337309-9682-425E-8EDC-2ECFACF79565}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetEmotivSDK", "UAVBrainLinkTool\DotNetEmotivSDK\DotNetEmotivSDK.csproj", "{D3337309-9682-425E-8EDC-2ECFACF79565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

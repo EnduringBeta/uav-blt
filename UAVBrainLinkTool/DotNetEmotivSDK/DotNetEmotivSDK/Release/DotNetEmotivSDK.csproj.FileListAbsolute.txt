@@ -1,0 +1,8 @@
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\build\Release\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\build\Release\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\DotNetEmotivSDK\DotNetEmotivSDK\Release\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\DotNetEmotivSDK\DotNetEmotivSDK\Release\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\UAVBrainLinkTool\UAVBrainLinkTool\bin\Release\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\UAVBrainLinkTool\UAVBrainLinkTool\bin\Release\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\UAVBrainLinkTool\UAVBrainLinkTool\DotNetEmotivSDK\DotNetEmotivSDK\Release\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\UAVBrainLinkTool\UAVBrainLinkTool\DotNetEmotivSDK\DotNetEmotivSDK\Release\DotNetEmotivSDK.pdb

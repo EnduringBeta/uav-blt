@@ -1,0 +1,10 @@
+C:\Sandbox\EEG\community-sdk\bin\win32\DotNetEmotivSDK.dll
+C:\Sandbox\EEG\community-sdk\bin\win32\DotNetEmotivSDK.pdb
+C:\Sandbox\EEG\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.csprojResolveAssemblyReference.cache
+C:\Sandbox\EEG\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.dll
+C:\Sandbox\EEG\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\community-sdk\bin\win32\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\community-sdk\bin\win32\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.dll
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.pdb
+C:\Sandbox\UAV BLT\community-sdk\examples_basic\C#\DotNetEmotivSDK\obj\x86\Debug\DotNetEmotivSDK.csprojResolveAssemblyReference.cache
