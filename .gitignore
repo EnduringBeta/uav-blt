@@ -1,3 +1,5 @@
 /UAVBrainLinkTool/bin
 /UAVBrainLinkTool/obj
+UAVBrainLinkTool/DotNetEmotivSDK/DotNetEmotivSDK
+UAVBrainLinkTool/DotNetEmotivSDK/obj
 *.suo
