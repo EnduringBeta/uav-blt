@@ -20,9 +20,20 @@ namespace UAVBrainLinkTool
         public const String configFileLoc = "./";
         public const String configFileName = "configBLT.json";
 
-        public const String configFieldCommandScripts = "commandScripts";
+        public const String configFieldCommandScriptInfo = "commandScriptInfo";
+        public const String configFieldUAVInfo = "uavInfo";
         public const String configFieldUserInfo = "userInfo";
         public const String configFieldCommandThresholds = "commandThresholds";
+
+        public const String configFieldScriptFileName = "scriptFileName";
+
+        public const String configFieldComPort = "comPort";
+        public const String configFieldTakeoffAltitude = "takeoffAltitude";
+        public const String configFieldLocationA = "locationA";
+        public const String configFieldLocationB = "locationB";
+        public const String configFieldLat = "lat";
+        public const String configFieldLon = "lon";
+        public const String configFieldAlt = "alt";
 
         public const String configFieldUserName = "userName";
         public const String configFieldPassword = "password";
@@ -45,10 +56,27 @@ namespace UAVBrainLinkTool
 
         public const String thresholdTag = "THRESHOLD";
 
-        public const String cmdTargetSelect = "BLT_TARGETSELECT";
-        public const String cmdFollow       = "BLT_FOLLOW";
-        public const String cmdTakeOff      = "BLT_TAKEOFF";
-        public const String cmdLand         = "BLT_LAND";
+        // Python script commands
+
+        // These are only defined in the configuration file,
+        // but they are included for reference.
+        public const String scriptTargetSelectA = "BLT_TARGETSELECTA";
+        public const String scriptTargetSelectB = "BLT_TARGETSELECTB";
+        public const String scriptFollow        = "BLT_FOLLOW";
+        public const String scriptTakeOff       = "BLT_TAKEOFF";
+        public const String scriptLand          = "BLT_LAND";
+        public const String scriptReturnLand    = "BLT_RETURNLAND";
+
+        // These are used to configure the script by this program
+        public const String scriptConnect       = "BLT_CONNECT";
+        public const String scriptDisconnect    = "BLT_DISCONNECT";
+        public const String scriptAttributes    = "BLT_ATTRIBUTES";
+        public const String scriptExit          = "BLT_EXIT";
+
+        public const String scriptConfigComPort         = "BLT_COMPORT";
+        public const String scriptConfigTakeoffAltitude = "BLT_TAKEOFFALTITUDE";
+        public const String scriptConfigLocationA       = "BLT_LOCATIONA";
+        public const String scriptConfigLocationB       = "BLT_LOCATIONB";
 
         // Colors!
 
@@ -71,6 +99,11 @@ namespace UAVBrainLinkTool
         public const String connecting = "Connecting...";
         public const String startListening = "Start Listening";
         public const String stopListening = "Stop Listening";
+
+        public const String connectToUAV = "Connect to UAV";
+        public const String disconnectFromUAV = "Disconnect from UAV";
+        public const String startTransmitting = "Transmit to UAV";
+        public const String stopTransmitting  = "Stop Transmitting";
 
         // General
 

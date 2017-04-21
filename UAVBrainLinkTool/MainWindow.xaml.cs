@@ -45,6 +45,31 @@ namespace UAVBrainLinkTool
             enableButtons(false);
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            EmotivDeviceComms.initialize();
+            EmotivServerComms.initialize();
+
+            EmotivDeviceComms.hookEvents();
+            EmotivDeviceComms.connectToDevice();
+
+            if (configLoaded)
+            {
+                TextBlockUsername.Text = Config.UserName;
+                TextBlockProfile.Text = Config.ProfileName;
+
+                CommandComms.initCommandComms();
+
+                // TODO: If information not available, prompt user
+                EmotivServerComms.logIn(Config.UserName, Config.Password);
+                EmotivServerComms.loadUserProfile(Config.ProfileName);
+
+                ButtonListen.Content = Constants.startListening;
+
+                enableButtons();
+            }
+        }
+
         // Disable buttons while loading
         private Boolean enableButtons(Boolean enable = true)
         {
@@ -96,29 +121,9 @@ namespace UAVBrainLinkTool
             EmotivDeviceComms.ActiveCommandsText = Constants.cmdLower;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)
         {
-            EmotivDeviceComms.initialize();
-            EmotivServerComms.initialize();
-
-            EmotivDeviceComms.hookEvents();
-            EmotivDeviceComms.connectToDevice();
-
-            if (configLoaded)
-            {
-                TextBlockUsername.Text = Config.UserName;
-                TextBlockProfile.Text = Config.ProfileName;
-
-                CommandComms.initCommandComms();
-
-                // TODO: If information not available, prompt user
-                EmotivServerComms.logIn(Config.UserName, Config.Password);
-                EmotivServerComms.loadUserProfile(Config.ProfileName);
-
-                ButtonListen.Content = Constants.startListening;
-
-                enableButtons();
-            }
+            CommandComms.connectUAV();
         }
     }
 }

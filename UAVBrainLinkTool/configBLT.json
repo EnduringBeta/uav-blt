@@ -1,11 +1,27 @@
 {
     "_comment": "Configuration file for the UAV Brain Link Tool (BLT)",
-    "commandScripts": {
-        "_comment": "Python scripts to execute specific mental commands",
-        "MC_PUSH": "UAVControlPython/simple_goto.py",
-        "MC_PULL": "UAVControlPython/test_takeoff.py",
-        "MC_RAISE": "UAVControlPython/test_takeoff.py",
-        "MC_LOWER": "UAVControlPython/simple_goto.py"
+    "commandScriptInfo": {
+        "_comment": "Python script path and strings to execute specific mental commands",
+        "scriptFileName": "UAVControlPython/EEGCommands.py",
+        "MC_PUSH": "BLT_TARGETSELECTA",
+        "MC_PULL": "BLT_TARGETSELECTB",
+        "MC_RAISE": "BLT_TAKEOFF",
+        "MC_LOWER": "BLT_LAND"
+    },
+    "uavInfo": {
+        "_comment": "Variables for configuring the Python script that controls the UAV",
+        "comPort": "COM5",
+        "takeoffAltitude": 50,
+        "locationA": {
+            "lat": -34.364114,
+            "lon": 149.166022,
+            "alt": 30
+        },
+        "locationB": {
+            "lat": -34.364114,
+            "lon": 149.166022,
+            "alt": 30
+        }
     },
     "userInfo": {
         "_comment": "User information for obtaining profile information and logging into Emotiv",
@@ -14,7 +30,7 @@
         "profileName": "My Profile"
     },
     "commandThresholds": {
-		"_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
+        "_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
         "activeCommandThreshold": 11,
         "inactiveCommandThreshold": 9
     }

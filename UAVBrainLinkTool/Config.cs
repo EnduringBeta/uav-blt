@@ -10,16 +10,37 @@ namespace UAVBrainLinkTool
 {
     class Config
     {
-        public static String ScriptPush { get; private set; }
-        public static String ScriptPull { get; private set; }
-        public static String ScriptRaise { get; private set; }
-        public static String ScriptLower { get; private set; }
+        public static String CommandScript { get; private set; }
+
+        public static String StringPush { get; private set; }
+        public static String StringPull { get; private set; }
+        public static String StringRaise { get; private set; }
+        public static String StringLower { get; private set; }
+
+        public static String COMPort { get; private set; }
+        public static int TakeoffAltitude { get; private set; }
+        public static GeoCoordinates LocationA { get; private set; }
+        public static GeoCoordinates LocationB { get; private set; }
 
         public static String UserName { get; private set; }
         public static String Password { get; private set; }
         public static String ProfileName { get; private set; }
 
         private static JObject ConfigJSON { get; set; }
+
+        public class GeoCoordinates
+        {
+            public double lat = 0.0;
+            public double lon = 0.0;
+            public double alt = 0.0;
+
+            public GeoCoordinates(double inputLat = 0.0, double inputLon = 0.0, double inputAlt = 0.0)
+            {
+                lat = inputLat;
+                lon = inputLon;
+                alt = inputAlt;
+            }
+        }
 
         public static Boolean importConfig()
         {
@@ -37,7 +58,9 @@ namespace UAVBrainLinkTool
             }
 
             if (success)
-                success = getCommandScripts();
+                success = getCommandInfo();
+            if (success)
+                success = getUAVInfo();
             if (success)
                 success = getUserInfo();
             if (success)
@@ -46,37 +69,61 @@ namespace UAVBrainLinkTool
             return success;
         }
 
-        private static Boolean getCommandScripts()
+        private static Boolean getCommandInfo()
         {
             Boolean success = true;
 
             try
             {
-                ScriptPush = (String)ConfigJSON[Constants.configFieldCommandScripts][Constants.cmdPush];
-                ScriptPull = (String)ConfigJSON[Constants.configFieldCommandScripts][Constants.cmdPull];
-                ScriptRaise = (String)ConfigJSON[Constants.configFieldCommandScripts][Constants.cmdRaise];
-                ScriptLower = (String)ConfigJSON[Constants.configFieldCommandScripts][Constants.cmdLower];
+                CommandScript = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.configFieldScriptFileName];
+
+                StringPush = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdPush];
+                StringPull = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdPull];
+                StringRaise = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdRaise];
+                StringLower = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdLower];
             }
             catch (Exception ex)
             {
-                Logging.outputLine("Config read exception - command scripts: " + ex.Message);
+                Logging.outputLine("Config read exception - command info: " + ex.Message);
                 return false;
             }
 
-            // Test whether script files exist
+            // Test whether script file exists
             if (success)
-                success = File.Exists(ScriptPush) || (String.Compare(ScriptPush, "") == 0);
-            if (success)
-                success = File.Exists(ScriptPull) || (String.Compare(ScriptPull, "") == 0);
-            if (success)
-                success = File.Exists(ScriptRaise) || (String.Compare(ScriptRaise, "") == 0);
-            if (success)
-                success = File.Exists(ScriptLower) || (String.Compare(ScriptLower, "") == 0);
+                success = File.Exists(CommandScript) || (String.Compare(CommandScript, "") == 0);
 
             if (!success)
-                Logging.outputLine("Error: not all configuration file command scripts could be found!");
+                Logging.outputLine("Error: configuration file command script could not be found!");
 
             return success;
+        }
+
+        private static Boolean getUAVInfo()
+        {
+            LocationA = new GeoCoordinates(
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldLat],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldLon],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldAlt]);
+            try
+            {
+                COMPort = (String)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldComPort];
+                TakeoffAltitude = (int)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldTakeoffAltitude];
+                LocationA = new GeoCoordinates(
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldLat],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldLon],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationA][Constants.configFieldAlt]);
+                LocationB = new GeoCoordinates(
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationB][Constants.configFieldLat],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationB][Constants.configFieldLon],
+                (double)ConfigJSON[Constants.configFieldUAVInfo][Constants.configFieldLocationB][Constants.configFieldAlt]);
+            }
+            catch (Exception ex)
+            {
+                Logging.outputLine("Config read exception - UAV info: " + ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         private static Boolean getUserInfo()
