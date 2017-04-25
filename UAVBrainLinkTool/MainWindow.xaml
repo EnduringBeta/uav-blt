@@ -32,7 +32,7 @@
         <TextBlock x:Name="TextBlockCurrentCommands" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="20" Width="489" TextAlignment="Center" Background="#FFC8C8C8" Height="27" VerticalAlignment="Bottom" Margin="10,0,0,193"
         	Text="{Binding Path=(local:EmotivDeviceComms.ActiveCommandsText)}"/>
         <Button x:Name="ButtonTransmit" Margin="0,0,10,138" FontSize="24" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="244" ToolTip="Start sending commands to connected UAV..."
-                Content="{Binding Path=(local:CommandComms.EnableTransmit), Converter={StaticResource boolToTransmittingTextConverter}}"
+                Content="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
                 IsEnabled="{Binding Path=(local:CommandComms.EnableTransmit)}" Click="ButtonTransmit_Click"/>
         <Label x:Name="LabelConnection" Content="Connection" HorizontalAlignment="Left" Margin="255,329,0,0" VerticalAlignment="Top" Width="244"/>
         <Button x:Name="ButtonConnectUAV" Margin="0,0,10,68" FontSize="20" HorizontalAlignment="Right" Width="244" Height="28" VerticalAlignment="Bottom" Click="ButtonConnectUAV_Click" Padding="1,0,1,1"
