@@ -54,9 +54,19 @@ namespace UAVBrainLinkTool
             // Currently only getting output when sending commands
             try
             {
-                // Start the process with info above
-                PythonScriptExecution = Process.Start(startInfo);
+                // Setup the process with info above and add handlers
+                PythonScriptExecution = new Process();
+                PythonScriptExecution.StartInfo = startInfo;
+                PythonScriptExecution.ErrorDataReceived += PythonScriptExecution_ErrorDataReceived;
+                PythonScriptExecution.OutputDataReceived += PythonScriptExecution_OutputDataReceived;
+                PythonScriptExecution.EnableRaisingEvents = true;
 
+                // Start the process
+                PythonScriptExecution.Start();
+                PythonScriptExecution.BeginErrorReadLine();
+                PythonScriptExecution.BeginOutputReadLine();
+
+                // Configure script with commands
                 success = configurePythonScript();
             }
             catch (Exception ex)
@@ -72,38 +82,29 @@ namespace UAVBrainLinkTool
             return success;
         }
 
-        private static Boolean configurePythonScript()
+        static void PythonScriptExecution_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Boolean success = sendPythonString(Constants.configFieldComPort + " " + Config.COMPort);
-            if (success)
-                sendPythonString(Constants.configFieldTakeoffAltitude + " " + Config.TakeoffAltitude);
-            if (success)
-                sendPythonString(Constants.configFieldLocationA + " " + Config.LocationA.lat + " " + Config.LocationA.lon + " " + Config.LocationA.alt);
-            if (success)
-                sendPythonString(Constants.configFieldLocationB + " " + Config.LocationB.lat + " " + Config.LocationB.lon + " " + Config.LocationB.alt);
-
-            return success;
+            String newLine = e.Data;
+            if (!String.IsNullOrEmpty(newLine))
+                Logging.outputLine("[Python] Script error: " + newLine);
         }
 
-        private static Boolean getPythonScriptOutput()
+        static void PythonScriptExecution_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Boolean success = false;
+            String newLine = e.Data;
+            if (!String.IsNullOrEmpty(newLine))
+                Logging.outputLine("[Python] Script output: " + newLine);
+        }
 
-            // Capture output for printing to log while avoiding hangup based on this advice
-            // (http://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why)
-            String stdError = PythonScriptExecution.StandardError.ReadToEnd(); // FREEZING HERE: LOOK AT NEXT
-            String stdOutput = PythonScriptExecution.StandardOutput.ReadToEnd();
-
-            if (!String.IsNullOrEmpty(stdError))
-            {
-                Logging.outputLine("[Python] Script error:\r\n" + stdError);
-                success = false;
-            }
-            if (!String.IsNullOrEmpty(stdOutput))
-            {
-                Logging.outputLine("[Python] Script output:\r\n" + stdOutput);
-                success = true;
-            }
+        private static Boolean configurePythonScript()
+        {
+            Boolean success = sendPythonString(Constants.scriptConfigComPort + " " + Config.COMPort);
+            if (success)
+                sendPythonString(Constants.scriptConfigTakeoffAltitude + " " + Config.TakeoffAltitude);
+            if (success)
+                sendPythonString(Constants.scriptConfigLocationA + " " + Config.LocationA.lat + " " + Config.LocationA.lon + " " + Config.LocationA.alt);
+            if (success)
+                sendPythonString(Constants.scriptConfigLocationB + " " + Config.LocationB.lat + " " + Config.LocationB.lon + " " + Config.LocationB.alt);
 
             return success;
         }
@@ -201,6 +202,8 @@ namespace UAVBrainLinkTool
             try
             {
                 PythonScriptExecution.StandardInput.WriteLine(scriptString);
+
+                success = true;
             }
             catch (Exception ex)
             {
@@ -210,8 +213,6 @@ namespace UAVBrainLinkTool
             }
             finally
             {
-                success = getPythonScriptOutput();
-
                 // Reset "isActive" if mental command (commandString should be non-empty)
                 if (String.Compare(commandString, "") != 0)
                 {
