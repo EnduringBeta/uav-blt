@@ -50,7 +50,6 @@ while (True):
 
     elif cmd == "BLT_LOCATIONA":
         newLocValues = arg.split()
-        print newLocValues
         try:
             a_location = LocationGlobalRelative(float(newLocValues[0]), float(newLocValues[1]), float(newLocValues[2]))
             print "Set location A to: " + str(a_location)

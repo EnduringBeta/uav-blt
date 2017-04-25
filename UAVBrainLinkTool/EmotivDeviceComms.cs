@@ -40,6 +40,8 @@ namespace UAVBrainLinkTool
             {
                 isListening = value;
                 OnStaticPropertyChanged("IsListening");
+
+                CommandComms.EnableTransmit = CommandComms.IsDeviceConnected && IsListening;
             }
         }
 
@@ -246,14 +248,27 @@ namespace UAVBrainLinkTool
             // For each active command
             foreach (CommandProcessing.CommandObject atvCmd in activeCommands)
             {
-                // Send command
-                CommandComms.sendCommand(atvCmd.command.ToString(), atvCmd.power);
+                Boolean success = false;
 
-                // Prepare UI string
-                if (String.Compare(commandsString, "") == 0)
-                    commandsString += atvCmd.command.ToString();
+                // If transmitting
+                if (CommandComms.IsTransmitting)
+                {
+                    // Send command
+                    success = CommandComms.sendCommand(atvCmd.command.ToString(), atvCmd.power);
+                }
+
+                if (success)
+                {
+                    // Prepare UI string
+                    if (String.Compare(commandsString, "") == 0)
+                        commandsString += atvCmd.command.ToString();
+                    else
+                        commandsString += ", " + atvCmd.command.ToString();
+                }
                 else
-                    commandsString += ", " + atvCmd.command.ToString();
+                {
+                    Logging.outputLine("Error: failure when sending command - " + atvCmd.command.ToString());
+                }
             }
 
             // Update UI

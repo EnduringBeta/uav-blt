@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,9 +11,100 @@ namespace UAVBrainLinkTool
 {
     public static class CommandComms
     {
-        public static List<CommandStatus> CommandStatusList { get; private set; }
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged(string propertyName)
+        {
+            var handler = StaticPropertyChanged;
+            if (handler != null)
+                handler(null, new PropertyChangedEventArgs(propertyName));
+        }
 
-        private static Process PythonScriptExecution { get; set; }
+        private static List<CommandStatus> commandStatusList = new List<CommandStatus>();
+        public static List<CommandStatus> CommandStatusList
+        {
+            get
+            {
+                return commandStatusList;
+            }
+            private set
+            {
+                commandStatusList = value;
+                OnStaticPropertyChanged("CommandStatusList");
+            }
+        }
+
+        private static Process pythonScriptExecution = new Process();
+        public static Process PythonScriptExecution
+        {
+            get
+            {
+                return pythonScriptExecution;
+            }
+            private set
+            {
+                pythonScriptExecution = value;
+                OnStaticPropertyChanged("PythonScriptExecution");
+            }
+        }
+
+        private static Boolean isScriptActive = false;
+        public static Boolean IsScriptActive
+        {
+            get
+            {
+                return isScriptActive;
+            }
+            private set
+            {
+                isScriptActive = value;
+                OnStaticPropertyChanged("IsScriptActive");
+            }
+        }
+
+        private static Boolean isDeviceConnected = false;
+        public static Boolean IsDeviceConnected
+        {
+            get
+            {
+                return isDeviceConnected;
+            }
+            private set
+            {
+                isDeviceConnected = value;
+                OnStaticPropertyChanged("IsDeviceConnected");
+
+                EnableTransmit = IsDeviceConnected && EmotivDeviceComms.IsListening;
+            }
+        }
+
+        // For button on UI
+        private static Boolean enableTransmit = false;
+        public static Boolean EnableTransmit
+        {
+            get
+            {
+                return enableTransmit;
+            }
+            set
+            {
+                enableTransmit = value;
+                OnStaticPropertyChanged("EnableTransmit");
+            }
+        }
+
+        private static Boolean isTransmitting = false;
+        public static Boolean IsTransmitting
+        {
+            get
+            {
+                return isTransmitting;
+            }
+            set
+            {
+                isTransmitting = value;
+                OnStaticPropertyChanged("IsTransmitting");
+            }
+        }
 
         public class CommandStatus
         {
@@ -59,7 +151,11 @@ namespace UAVBrainLinkTool
                 PythonScriptExecution.StartInfo = startInfo;
                 PythonScriptExecution.ErrorDataReceived += PythonScriptExecution_ErrorDataReceived;
                 PythonScriptExecution.OutputDataReceived += PythonScriptExecution_OutputDataReceived;
+                PythonScriptExecution.Exited += PythonScriptExecution_Exited;
                 PythonScriptExecution.EnableRaisingEvents = true;
+
+                // Toggle flag indicating script is active
+                IsScriptActive = true;
 
                 // Start the process
                 PythonScriptExecution.Start();
@@ -96,6 +192,13 @@ namespace UAVBrainLinkTool
                 Logging.outputLine("[Python] Script output: " + newLine);
         }
 
+        static void PythonScriptExecution_Exited(object sender, EventArgs e)
+        {
+            IsScriptActive = false;
+            IsDeviceConnected = false;
+            Logging.outputLine("Warning: script has exited.");
+        }
+
         private static Boolean configurePythonScript()
         {
             Boolean success = sendPythonString(Constants.scriptConfigComPort + " " + Config.COMPort);
@@ -111,26 +214,54 @@ namespace UAVBrainLinkTool
 
         public static Boolean endPythonScript()
         {
-            sendPythonString(Constants.scriptExit);
-            return true;
+            return sendPythonString(Constants.scriptExit);
+
+            // Set in PythonScriptExecution_Exited
+            //IsScriptActive = false;
+            //IsDeviceConnected = false;
         }
 
         public static Boolean connectUAV()
         {
-            sendPythonString(Constants.scriptConnect);
-            return true;
+            if (IsDeviceConnected)
+            {
+                Logging.outputLine("Warning: attempting to connect device when already connected.");
+                return false;
+            }
+
+            if (sendPythonString(Constants.scriptConnect))
+            {
+                IsDeviceConnected = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static Boolean disconnectUAV()
         {
-            sendPythonString(Constants.scriptDisconnect);
-            return true;
+            if (!IsDeviceConnected)
+            {
+                Logging.outputLine("Warning: attempting to disconnect device when not connected.");
+                return false;
+            }
+
+            if (sendPythonString(Constants.scriptConnect))
+            {
+                IsDeviceConnected = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static Boolean attributesUAV()
         {
-            sendPythonString(Constants.scriptAttributes);
-            return true;
+            return sendPythonString(Constants.scriptAttributes);
         }
 
         public static Boolean sendCommand(String commandString, Single commandPower)

@@ -97,7 +97,7 @@ namespace UAVBrainLinkTool
 
         public const String noActiveCommands = "No Active Commands";
         public const String connecting = "Connecting...";
-        public const String startListening = "Start Listening";
+        public const String startListening = "Listen to Emotiv";
         public const String stopListening = "Stop Listening";
 
         public const String connectToUAV = "Connect to UAV";
