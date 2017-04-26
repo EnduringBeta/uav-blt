@@ -60,7 +60,9 @@ namespace UAVBrainLinkTool
             Single power = es.MentalCommandGetCurrentActionPower();
             Boolean isActive = es.MentalCommandIsActive();
 
-            Logging.outputLine(String.Format("Received:\t\t{0,15}\t{1,10:N2}\t{2,10:N2}s\t{3,8}", cogAction, power, timeFromStart, isActive ? "Active" : "Inactive"));
+            if (Constants.logIndividualEmotivDataPoints)
+                Logging.outputLine(String.Format("Received:\t\t{0,15}\t{1,10:N2}\t{2,10:N2}s\t{3,8}", cogAction, power, timeFromStart, isActive ? "Active" : "Inactive"));
+
             EmotivDeviceComms.EventsProcessedThisInterval++;
 
             CommandProcessing.updateCommandObjects(timeFromStart, cogAction, power, isActive);
