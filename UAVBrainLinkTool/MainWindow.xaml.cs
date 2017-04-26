@@ -51,7 +51,7 @@ namespace UAVBrainLinkTool
             EmotivDeviceComms.initialize();
             EmotivServerComms.initialize();
 
-            TextBlockCurrentCommands.Text = "Connecting to Emotiv device...";
+            //TextBlockCurrentCommands.Text = "Connecting to Emotiv device...";
 
             EmotivDeviceComms.hookEvents();
             EmotivDeviceComms.connectToDevice();
@@ -68,16 +68,14 @@ namespace UAVBrainLinkTool
                 EmotivServerComms.logIn(Config.UserName, Config.Password);
                 EmotivServerComms.loadUserProfile(Config.ProfileName);
 
-                ButtonListen.Content = Constants.startListening;
-
                 enableButtonsLoaded();
 
-                TextBlockCurrentCommands.Text = "Emotiv device connected!";
+                //TextBlockCurrentCommands.Text = "Emotiv device connected!";
             }
             else
             {
                 // TODO: Improve this hacky method of showing errors.
-                TextBlockCurrentCommands.Text = "Error: failure when reading configuration file!";
+                //TextBlockCurrentCommands.Text = "Error: failure when reading configuration file!";
             }
         }
 
@@ -129,24 +127,29 @@ namespace UAVBrainLinkTool
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
         {
-            TextBlockCurrentCommands.Text = "";
+            //TextBlockCurrentCommands.Text = "";
 
             // TODO: Clear other active UI elements when stopped?
             if (EmotivDeviceComms.IsListening)
             {
-                if (EmotivDeviceComms.stopListening())
-                    ButtonListen.Content = Constants.startListening;
+                EmotivDeviceComms.stopListening();
             }
             else
             {
-                if (EmotivDeviceComms.startListening())
-                    ButtonListen.Content = Constants.stopListening;
+                EmotivDeviceComms.startListening();
             }
         }
 
         private void ButtonTransmit_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.IsTransmitting = true;
+            if (CommandComms.IsTransmitting)
+            {
+                CommandComms.IsTransmitting = false;
+            }
+            else
+            {
+                CommandComms.IsTransmitting = true;
+            }
         }
 
         private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)

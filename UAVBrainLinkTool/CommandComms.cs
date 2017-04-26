@@ -203,11 +203,11 @@ namespace UAVBrainLinkTool
         {
             Boolean success = sendPythonString(Constants.scriptConfigComPort + " " + Config.COMPort);
             if (success)
-                sendPythonString(Constants.scriptConfigTakeoffAltitude + " " + Config.TakeoffAltitude);
+                success = sendPythonString(Constants.scriptConfigTakeoffAltitude + " " + Config.TakeoffAltitude);
             if (success)
-                sendPythonString(Constants.scriptConfigLocationA + " " + Config.LocationA.lat + " " + Config.LocationA.lon + " " + Config.LocationA.alt);
+                success = sendPythonString(Constants.scriptConfigLocationA + " " + Config.LocationA.lat + " " + Config.LocationA.lon + " " + Config.LocationA.alt);
             if (success)
-                sendPythonString(Constants.scriptConfigLocationB + " " + Config.LocationB.lat + " " + Config.LocationB.lon + " " + Config.LocationB.alt);
+                success = sendPythonString(Constants.scriptConfigLocationB + " " + Config.LocationB.lat + " " + Config.LocationB.lon + " " + Config.LocationB.alt);
 
             return success;
         }
@@ -248,7 +248,7 @@ namespace UAVBrainLinkTool
                 return false;
             }
 
-            if (sendPythonString(Constants.scriptConnect))
+            if (sendPythonString(Constants.scriptDisconnect))
             {
                 IsDeviceConnected = false;
                 return true;

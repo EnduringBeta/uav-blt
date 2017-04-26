@@ -248,7 +248,8 @@ namespace UAVBrainLinkTool
             // For each active command
             foreach (CommandProcessing.CommandObject atvCmd in activeCommands)
             {
-                Boolean success = false;
+                // Make success by default true so if not transmitting it is still recorded as active in UI
+                Boolean success = true;
 
                 // If transmitting
                 if (CommandComms.IsTransmitting)

@@ -29,7 +29,8 @@ while (True):
     arg = ""
     if len(splitStr) > 1:
         for i in range(1, len(splitStr)):
-            arg += " " + splitStr[i].lower()
+            arg += splitStr[i].lower() + " "
+        arg = arg.strip()
     
     if cmd == "BLT_COMPORT":
         newPort = arg
