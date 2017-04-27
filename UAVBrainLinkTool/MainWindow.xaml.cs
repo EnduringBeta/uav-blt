@@ -43,7 +43,7 @@ namespace UAVBrainLinkTool
             ButtonRaise.Background = Constants.colorButtonCmdRaise;
             ButtonLower.Background = Constants.colorButtonCmdLower;
 
-            enableAllButtons(false);
+            enableButtonsLoaded(false);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -79,20 +79,8 @@ namespace UAVBrainLinkTool
             }
         }
 
-        // Disable buttons while loading
-        private Boolean enableAllButtons(Boolean enable = true)
-        {
-            ButtonPush.IsEnabled       = enable;
-            ButtonPull.IsEnabled       = enable;
-            ButtonRaise.IsEnabled      = enable;
-            ButtonLower.IsEnabled      = enable;
-            ButtonListen.IsEnabled     = enable;
-            ButtonTransmit.IsEnabled   = enable;
-            ButtonConnectUAV.IsEnabled = enable;
-
-            return true;
-        }
-
+        // Only set "IsEnabled" for these buttons because others are controlled by properties
+        // Setting those manually breaks the binding
         private Boolean enableButtonsLoaded(Boolean enable = true)
         {
             ButtonListen.IsEnabled = enable;
