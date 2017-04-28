@@ -272,11 +272,15 @@ namespace UAVBrainLinkTool
             cmdObj.isActive = true;
 
             if (sendPythonString(getCommandScriptString(commandString), commandString))
+            {
                 Logging.outputLine(String.Format("Sent Command:\t{0,15}\t{1,10:N2}\t\t\t\t\t\t\t!", commandString, commandPower));
+                return true;
+            }
             else
+            {
                 Logging.outputLine(String.Format("Command Fail:\t{0,15}\t{1,10:N2}\t\t\t\t\t\t\t?", commandString, commandPower));
-
-            return cmdObj.isActive;
+                return false;
+            }
         }
 
         private static String getCommandScriptString(String commandString)
