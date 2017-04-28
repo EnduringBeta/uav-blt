@@ -29,9 +29,10 @@
         "password": "Bxq^VX!nOv23",
         "profileName": "My Profile"
     },
-    "commandThresholds": {
-        "_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
+    "commandPower": {
+        "_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive and the percentage of power a command is reduced to after being sent, to reduce spam",
         "activeCommandThreshold": 11,
-        "inactiveCommandThreshold": 9
+        "inactiveCommandThreshold": 9,
+        "commandSentPowerPercentage": 25
     }
 }

@@ -242,6 +242,9 @@ namespace UAVBrainLinkTool
                 {
                     // Send command
                     success = CommandComms.sendCommand(atvCmd.command.ToString(), atvCmd.power);
+
+                    // Fractionally reduce power to prevent spam when transmitting
+                    atvCmd.reducePower();
                 }
 
                 if (success)

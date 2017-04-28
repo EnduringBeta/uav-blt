@@ -24,7 +24,7 @@ namespace UAVBrainLinkTool
         public const String configFieldCommandScriptInfo = "commandScriptInfo";
         public const String configFieldUAVInfo = "uavInfo";
         public const String configFieldUserInfo = "userInfo";
-        public const String configFieldCommandThresholds = "commandThresholds";
+        public const String configFieldCommandThresholds = "commandPower";
 
         public const String configFieldScriptFileName = "scriptFileName";
 
@@ -42,6 +42,7 @@ namespace UAVBrainLinkTool
 
         public const String configFieldActiveCommandThreshold = "activeCommandThreshold";
         public const String configFieldInactiveCommandThreshold = "inactiveCommandThreshold";
+        public const String configFieldCommandSentPowerPercentage = "commandSentPowerPercentage";
 
         // Command scripts
 
@@ -112,5 +113,7 @@ namespace UAVBrainLinkTool
         public const String dateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
 
         public const Single millisecondsInSeconds = 1000;
+
+        public const int maxPercent = 100;
     }
 }

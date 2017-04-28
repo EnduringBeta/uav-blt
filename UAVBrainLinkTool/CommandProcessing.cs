@@ -23,6 +23,7 @@ namespace UAVBrainLinkTool
         // Set in config file
         public static Single ActiveCommandThreshold { get; set; }
         public static Single InactiveCommandThreshold { get; set; }
+        public static int CommandSentPowerPercentage { get; set; }
 
         private static Single sampleTimeWindow = 3; // Seconds
         public static Single SampleTimeWindow
@@ -82,6 +83,15 @@ namespace UAVBrainLinkTool
             public Boolean resetPower()
             {
                 power = 0;
+                updateExceedsThreshold();
+
+                return true;
+            }
+
+            // When command is active and sent, the power is significantly cut to reduce likelihood of spam
+            public Boolean reducePower()
+            {
+                power = power * (CommandSentPowerPercentage / Constants.maxPercent);
                 updateExceedsThreshold();
 
                 return true;

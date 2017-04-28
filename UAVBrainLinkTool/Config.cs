@@ -127,7 +127,7 @@ namespace UAVBrainLinkTool
             if (success)
                 success = getUserInfo();
             if (success)
-                success = getCommandThresholds();
+                success = getCommandPower();
 
             if (success)
                 ConfigLoaded = true;
@@ -211,16 +211,17 @@ namespace UAVBrainLinkTool
             return true;
         }
 
-        private static Boolean getCommandThresholds()
+        private static Boolean getCommandPower()
         {
             try
             {
                 CommandProcessing.ActiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldActiveCommandThreshold];
                 CommandProcessing.InactiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldInactiveCommandThreshold];
+                CommandProcessing.CommandSentPowerPercentage = (int)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldCommandSentPowerPercentage];
             }
             catch (Exception ex)
             {
-                Logging.outputLine("Config read exception - command thresholds: " + ex.Message);
+                Logging.outputLine("Config read exception - command power: " + ex.Message);
                 return false;
             }
 
