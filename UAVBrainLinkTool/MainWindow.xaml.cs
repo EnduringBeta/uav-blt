@@ -23,13 +23,12 @@ namespace UAVBrainLinkTool
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Boolean configLoaded = false;
-
         public MainWindow()
         {
+            Utils.ProgramLoaded = false;
+
             // Load config file first for necessary plot info
-            configLoaded = Config.importConfig();
-            if (!configLoaded)
+            if (!Config.importConfig())
                 Logging.outputLine("Error: failure when reading configuration file!");
 
             // Initialize plot before referencing it in XAML
@@ -38,84 +37,48 @@ namespace UAVBrainLinkTool
             InitializeComponent();
 
             // Color the command buttons!
+            // Note: In general, be cautious about setting properties of UI elements.
+            // Doing so will remove any bindings set for that property.
+            // Use a property in code (like Utils.StatusBarText) for maximum flexibility.
             ButtonPush.Background = Constants.colorButtonCmdPush;
             ButtonPull.Background = Constants.colorButtonCmdPull;
             ButtonRaise.Background = Constants.colorButtonCmdRaise;
             ButtonLower.Background = Constants.colorButtonCmdLower;
-
-            enableButtonsLoaded(false);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            EmotivDeviceComms.initialize();
-            EmotivServerComms.initialize();
-
-            //TextBlockCurrentCommands.Text = "Connecting to Emotiv device...";
-
-            EmotivDeviceComms.hookEvents();
-            EmotivDeviceComms.connectToDevice();
-
-            if (configLoaded)
-            {
-                TextBlockUsername.Text = Config.UserName;
-                TextBlockProfile.Text = Config.ProfileName;
-                TextBlockAntenna.Text = Config.COMPort;
-
-                CommandComms.initCommandComms();
-
-                // TODO: If information not available, prompt user
-                EmotivServerComms.logIn(Config.UserName, Config.Password);
-                EmotivServerComms.loadUserProfile(Config.ProfileName);
-
-                enableButtonsLoaded();
-
-                //TextBlockCurrentCommands.Text = "Emotiv device connected!";
-            }
-            else
-            {
-                // TODO: Improve this hacky method of showing errors.
-                //TextBlockCurrentCommands.Text = "Error: failure when reading configuration file!";
-            }
-        }
-
-        // Only set "IsEnabled" for these buttons because others are controlled by properties
-        // Setting those manually breaks the binding
-        private Boolean enableButtonsLoaded(Boolean enable = true)
-        {
-            ButtonListen.IsEnabled = enable;
-            ButtonConnectUAV.IsEnabled = enable;
-
-            return true;
+            if (Utils.initAll())
+                Utils.ProgramLoaded = true;
         }
 
         private void ButtonPush_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdPush, CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = Constants.cmdPush;
+            Utils.updateStatusBarText(Constants.cmdPush);
         }
 
         private void ButtonPull_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdPull, CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = Constants.cmdPull;
+            Utils.updateStatusBarText(Constants.cmdPull);
         }
 
         private void ButtonRaise_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdRaise, CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = Constants.cmdRaise;
+            Utils.updateStatusBarText(Constants.cmdRaise);
         }
 
         private void ButtonLower_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdLower, CommandProcessing.ActiveCommandThreshold);
-            EmotivDeviceComms.ActiveCommandsText = Constants.cmdLower;
+            Utils.updateStatusBarText(Constants.cmdLower);
         }
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
         {
-            //TextBlockCurrentCommands.Text = "";
+            Utils.updateStatusBarText();
 
             // TODO: Clear other active UI elements when stopped?
             if (EmotivDeviceComms.IsListening)
@@ -140,6 +103,7 @@ namespace UAVBrainLinkTool
             }
         }
 
+        // TODO: Update status bar
         private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)
         {
             if (CommandComms.IsDeviceConnected)

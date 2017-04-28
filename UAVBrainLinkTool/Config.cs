@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,73 @@ using System.Threading.Tasks;
 
 namespace UAVBrainLinkTool
 {
-    class Config
+    static public class Config
     {
+        // http://stackoverflow.com/questions/34762879/static-binding-doesnt-update-when-resource-changes
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged(string propertyName)
+        {
+            var handler = StaticPropertyChanged;
+            if (handler != null)
+                handler(null, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private static String userName = "";
+        public static String UserName
+        {
+            get
+            {
+                return userName;
+            }
+            private set
+            {
+                userName = value;
+                OnStaticPropertyChanged("UserName");
+            }
+        }
+
+        private static String password = "";
+        public static String Password
+        {
+            get
+            {
+                return password;
+            }
+            private set
+            {
+                password = value;
+                OnStaticPropertyChanged("Password");
+            }
+        }
+
+        private static String profileName = "";
+        public static String ProfileName
+        {
+            get
+            {
+                return profileName;
+            }
+            private set
+            {
+                profileName = value;
+                OnStaticPropertyChanged("ProfileName");
+            }
+        }
+
+        private static String comPort = "";
+        public static String COMPort
+        {
+            get
+            {
+                return comPort;
+            }
+            private set
+            {
+                comPort = value;
+                OnStaticPropertyChanged("COMPort");
+            }
+        }
+
         public static String CommandScript { get; private set; }
 
         public static String StringPush { get; private set; }
@@ -17,16 +83,13 @@ namespace UAVBrainLinkTool
         public static String StringRaise { get; private set; }
         public static String StringLower { get; private set; }
 
-        public static String COMPort { get; private set; }
         public static int TakeoffAltitude { get; private set; }
         public static GeoCoordinates LocationA { get; private set; }
         public static GeoCoordinates LocationB { get; private set; }
 
-        public static String UserName { get; private set; }
-        public static String Password { get; private set; }
-        public static String ProfileName { get; private set; }
-
         private static JObject ConfigJSON { get; set; }
+
+        public static Boolean ConfigLoaded { get; private set; }
 
         public class GeoCoordinates
         {
@@ -66,7 +129,12 @@ namespace UAVBrainLinkTool
             if (success)
                 success = getCommandThresholds();
 
-            return success;
+            if (success)
+                ConfigLoaded = true;
+            else
+                ConfigLoaded = false;
+
+            return ConfigLoaded;
         }
 
         private static Boolean getCommandInfo()

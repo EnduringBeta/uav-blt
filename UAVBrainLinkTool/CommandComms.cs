@@ -73,22 +73,7 @@ namespace UAVBrainLinkTool
                 isDeviceConnected = value;
                 OnStaticPropertyChanged("IsDeviceConnected");
 
-                EnableTransmit = IsDeviceConnected && EmotivDeviceComms.IsListening;
-            }
-        }
-
-        // For button on UI
-        private static Boolean enableTransmit = false;
-        public static Boolean EnableTransmit
-        {
-            get
-            {
-                return enableTransmit;
-            }
-            set
-            {
-                enableTransmit = value;
-                OnStaticPropertyChanged("EnableTransmit");
+                Utils.EnableTransmit = IsDeviceConnected && EmotivDeviceComms.IsListening;
             }
         }
 

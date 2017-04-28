@@ -41,7 +41,7 @@ namespace UAVBrainLinkTool
                 isListening = value;
                 OnStaticPropertyChanged("IsListening");
 
-                CommandComms.EnableTransmit = CommandComms.IsDeviceConnected && IsListening;
+                Utils.EnableTransmit = CommandComms.IsDeviceConnected && IsListening;
             }
         }
 
@@ -84,20 +84,6 @@ namespace UAVBrainLinkTool
             {
                 eventsProcessedThisInterval = value;
                 OnStaticPropertyChanged("EventsProcessedThisInterval");
-            }
-        }
-
-        private static String activeCommandsText = Constants.noActiveCommands;
-        public static String ActiveCommandsText
-        {
-            get
-            {
-                return activeCommandsText;
-            }
-            set
-            {
-                activeCommandsText = value;
-                OnStaticPropertyChanged("ActiveCommandsText");
             }
         }
 
@@ -206,7 +192,7 @@ namespace UAVBrainLinkTool
             IsListening = false;
             Logging.outputLine("Stopped listening.");
 
-            ActiveCommandsText = Constants.noActiveCommands;
+            Utils.updateStatusBarText(Constants.noActiveCommands);
 
             return true;
         }
@@ -274,9 +260,9 @@ namespace UAVBrainLinkTool
 
             // Update UI
             if (String.Compare(commandsString, "") == 0)
-                ActiveCommandsText = Constants.noActiveCommands;
+                Utils.updateStatusBarText(Constants.noActiveCommands);
             else
-                ActiveCommandsText = commandsString;
+                Utils.updateStatusBarText(commandsString);
 
             // If total listening time is set and has expired, stop
             if (ListeningMillisecondLength > 0 &&

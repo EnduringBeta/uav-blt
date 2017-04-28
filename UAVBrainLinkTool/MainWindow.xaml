@@ -20,25 +20,27 @@
             <oxy:PlotView Model="{Binding Path=(local:Plotting.CommandPlotModel)}"/>
         </Grid>
         <Grid Margin="10,329,259,68">
-            <TextBlock x:Name="TextBlockUsername" HorizontalAlignment="Left" TextWrapping="Wrap" Text="[Username]" VerticalAlignment="Top" FontSize="20" Width="240" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
-            <Label x:Name="LabelUsername" Content="Emotiv Username" HorizontalAlignment="Left" VerticalAlignment="Top" Width="230"/>
+            <TextBlock x:Name="TextBlockUserName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=(local:Config.UserName)}" VerticalAlignment="Top" FontSize="20" Width="240" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
+            <Label x:Name="LabelUserName" Content="Emotiv User Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="230"/>
         </Grid>
         <Grid Margin="10,387,259,10">
-            <TextBlock x:Name="TextBlockProfile" HorizontalAlignment="Left" TextWrapping="Wrap" Text="[Profile]" VerticalAlignment="Top" FontSize="20" Width="240" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
+            <TextBlock x:Name="TextBlockProfile" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=(local:Config.ProfileName)}" VerticalAlignment="Top" FontSize="20" Width="240" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
             <Label x:Name="LabelProfile" Content="Emotiv Profile" HorizontalAlignment="Left" VerticalAlignment="Top" Width="230"/>
         </Grid>
         <Button x:Name="ButtonListen" HorizontalAlignment="Left" Width="240" FontSize="24" IsDefault="True" ToolTip="Start listening and processing Emotiv events" Click="ButtonListen_Click" Height="50" VerticalAlignment="Bottom" Margin="10,0,0,138"
-                Content="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"/>
+                Content="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"
+                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}"/>
         <TextBlock x:Name="TextBlockCurrentCommands" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="20" Width="489" TextAlignment="Center" Background="#FFC8C8C8" Height="27" VerticalAlignment="Bottom" Margin="10,0,0,193"
-        	Text="{Binding Path=(local:EmotivDeviceComms.ActiveCommandsText)}"/>
+        	Text="{Binding Path=(local:Utils.StatusBarText)}"/>
         <Button x:Name="ButtonTransmit" Margin="0,0,10,138" FontSize="24" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="244" ToolTip="Start sending commands to connected UAV..."
                 Content="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
-                IsEnabled="{Binding Path=(local:CommandComms.EnableTransmit)}" Click="ButtonTransmit_Click"/>
+                IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click"/>
         <Label x:Name="LabelConnection" Content="Connection" HorizontalAlignment="Left" Margin="255,329,0,0" VerticalAlignment="Top" Width="244"/>
         <Button x:Name="ButtonConnectUAV" Margin="0,0,10,68" FontSize="20" HorizontalAlignment="Right" Width="244" Height="28" VerticalAlignment="Bottom" Click="ButtonConnectUAV_Click" Padding="1,0,1,1"
-                Content="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"/>
+                Content="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"
+                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}"/>
         <Grid Margin="255,387,10,10">
-            <TextBlock x:Name="TextBlockAntenna" HorizontalAlignment="Left" TextWrapping="Wrap" Text="[COM Port]" VerticalAlignment="Top" FontSize="20" Width="244" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
+            <TextBlock x:Name="TextBlockAntenna" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=(local:Config.COMPort)}" VerticalAlignment="Top" FontSize="20" Width="244" TextAlignment="Center" Background="#FFC8C8C8" Margin="0,26,0,0"/>
             <Label x:Name="LabelAntenna" Content="Antenna COM Port" HorizontalAlignment="Left" VerticalAlignment="Top" Width="234"/>
         </Grid>
     </Grid>
