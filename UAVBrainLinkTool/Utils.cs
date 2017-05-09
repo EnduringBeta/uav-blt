@@ -18,6 +18,20 @@ namespace UAVBrainLinkTool
                 handler(null, new PropertyChangedEventArgs(propertyName));
         }
 
+        private static String windowTitle = "UAV Brain Link Tool";
+        public static String WindowTitle
+        {
+            get
+            {
+                return windowTitle;
+            }
+            set
+            {
+                windowTitle = value;
+                OnStaticPropertyChanged("WindowTitle");
+            }
+        }
+
         private static String statusBarText = "";
         public static String StatusBarText
         {
@@ -84,11 +98,6 @@ namespace UAVBrainLinkTool
 
             if (success)
                 success = initEmotivDevice();
-
-            // TODO: Make text blocks bound
-            //TextBlockUsername.Text = Config.UserName;
-            //TextBlockProfile.Text = Config.ProfileName;
-            //TextBlockAntenna.Text = Config.COMPort;
 
             if (success)
             {

@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:UAVBrainLinkTool" x:Class="UAVBrainLinkTool.MainWindow"
     xmlns:oxy="http://oxyplot.org/wpf"
-    Title="UAV Brain Link Tool" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ContentRendered="Window_ContentRendered" Loaded="Window_Loaded">
+    Title="{Binding Path=(local:Utils.WindowTitle)}" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ContentRendered="Window_ContentRendered" Loaded="Window_Loaded">
     <Window.Resources>
         <local:BoolToListeningTextConverter x:Key="boolToListeningTextConverter" />
         <local:BoolToTransmittingTextConverter x:Key="boolToTransmittingTextConverter" />

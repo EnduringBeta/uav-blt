@@ -28,7 +28,9 @@ namespace UAVBrainLinkTool
             Utils.ProgramLoaded = false;
 
             // Load config file first for necessary plot info
-            if (!Config.importConfig())
+            if (Config.importConfig())
+                setDetailedWindowTitle();
+            else
                 Logging.outputLine("Error: failure when reading configuration file!");
 
             // Initialize plot before referencing it in XAML
@@ -46,6 +48,13 @@ namespace UAVBrainLinkTool
         {
             if (Utils.initAll())
                 Utils.ProgramLoaded = true;
+        }
+
+        private Boolean setDetailedWindowTitle()
+        {
+            Utils.WindowTitle = Utils.WindowTitle + " - " + Config.UserName + " (" + Config.ProfileName + ")" + " - " + Config.COMPort;
+
+            return true;
         }
 
         private Boolean setDisabledCommandButtonTextColors()
