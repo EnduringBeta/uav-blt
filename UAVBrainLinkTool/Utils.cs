@@ -77,10 +77,17 @@ namespace UAVBrainLinkTool
 
         public static Boolean updateStatusBarText(String text = "")
         {
-            StatusBarText = text;
-            Logging.outputLine(text);
+            // Only output to log and update if new status is different from old
+            // This prevents constant reports of no commands from filling up the log
+            if (String.Compare(StatusBarText, text) != 0)
+            {
+                Logging.outputLine(text);
+                StatusBarText = text;
+                return true;
+            }
 
-            return true;
+            // Returns false if not updated
+            return false;
         }
 
         public static Boolean initAll(Boolean forceConfigReload = false, Boolean forcePlotReload = false)
