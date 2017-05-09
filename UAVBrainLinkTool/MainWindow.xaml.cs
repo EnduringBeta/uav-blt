@@ -61,16 +61,20 @@ namespace UAVBrainLinkTool
         {
             // https://social.msdn.microsoft.com/Forums/vstudio/en-US/0d3d9b06-6855-4a91-bc2e-f1f0973e3b31/how-to-change-the-foreground-color-of-a-disabled-button-in-wpf
             ContentPresenter cp = ButtonPush.Template.FindName("contentPresenter", ButtonPush) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
 
             cp = ButtonPull.Template.FindName("contentPresenter", ButtonPull) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
 
             cp = ButtonLift.Template.FindName("contentPresenter", ButtonLift) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
 
             cp = ButtonDrop.Template.FindName("contentPresenter", ButtonDrop) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
 
             return true;
         }
