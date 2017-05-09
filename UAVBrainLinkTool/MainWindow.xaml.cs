@@ -35,15 +35,11 @@ namespace UAVBrainLinkTool
             Plotting.initPlot();
 
             InitializeComponent();
+        }
 
-            // Color the command buttons!
-            // Note: In general, be cautious about setting properties of UI elements.
-            // Doing so will remove any bindings set for that property.
-            // Use a property in code (like Utils.StatusBarText) for maximum flexibility.
-            ButtonPush.Background = Constants.colorButtonCmdPush;
-            ButtonPull.Background = Constants.colorButtonCmdPull;
-            ButtonLift.Background = Constants.colorButtonCmdLift;
-            ButtonDrop.Background = Constants.colorButtonCmdDrop;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            setDisabledCommandButtonTextColors();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -52,28 +48,58 @@ namespace UAVBrainLinkTool
                 Utils.ProgramLoaded = true;
         }
 
+        private Boolean setDisabledCommandButtonTextColors()
+        {
+            // https://social.msdn.microsoft.com/Forums/vstudio/en-US/0d3d9b06-6855-4a91-bc2e-f1f0973e3b31/how-to-change-the-foreground-color-of-a-disabled-button-in-wpf
+            ContentPresenter cp = ButtonPush.Template.FindName("contentPresenter", ButtonPush) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
+
+            cp = ButtonPull.Template.FindName("contentPresenter", ButtonPull) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
+
+            cp = ButtonLift.Template.FindName("contentPresenter", ButtonLift) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
+
+            cp = ButtonDrop.Template.FindName("contentPresenter", ButtonDrop) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
+
+            return true;
+        }
+
         private void ButtonPush_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdPush, CommandProcessing.ActiveCommandThreshold);
             Utils.updateStatusBarText(Constants.cmdPush);
+
+            ContentPresenter cp = ButtonPush.Template.FindName("contentPresenter", ButtonPush) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
         }
 
         private void ButtonPull_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdPull, CommandProcessing.ActiveCommandThreshold);
             Utils.updateStatusBarText(Constants.cmdPull);
+
+            ContentPresenter cp = ButtonPull.Template.FindName("contentPresenter", ButtonPull) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
         }
 
         private void ButtonLift_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdLift, CommandProcessing.ActiveCommandThreshold);
             Utils.updateStatusBarText(Constants.cmdLift);
+
+            ContentPresenter cp = ButtonLift.Template.FindName("contentPresenter", ButtonLift) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
         }
 
         private void ButtonDrop_Click(object sender, RoutedEventArgs e)
         {
             CommandComms.sendCommand(Constants.cmdDrop, CommandProcessing.ActiveCommandThreshold);
             Utils.updateStatusBarText(Constants.cmdDrop);
+
+            ContentPresenter cp = ButtonDrop.Template.FindName("contentPresenter", ButtonDrop) as ContentPresenter;
+            cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
         }
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)

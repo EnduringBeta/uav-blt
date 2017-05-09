@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,14 @@ namespace UAVBrainLinkTool
 {
     public static class Constants
     {
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged(string propertyName)
+        {
+            var handler = StaticPropertyChanged;
+            if (handler != null)
+                handler(null, new PropertyChangedEventArgs(propertyName));
+        }
+
         public const int version = -1;
 
         public const Boolean logToConsole = true;
@@ -90,10 +99,73 @@ namespace UAVBrainLinkTool
         public static OxyPlot.OxyColor colorPlotThreshold  = OxyPlot.OxyColors.Gray;
         public static OxyPlot.OxyColor colorPlotDefault    = OxyPlot.OxyColors.Black;
 
-        public static SolidColorBrush colorButtonCmdPush  = Brushes.ForestGreen;
-        public static SolidColorBrush colorButtonCmdPull  = Brushes.IndianRed;
-        public static SolidColorBrush colorButtonCmdLift = Brushes.SkyBlue;
-        public static SolidColorBrush colorButtonCmdDrop = Brushes.SandyBrown;
+        // Button colors (properties for XAML)
+
+        private static SolidColorBrush colorButtonCmdPush = Brushes.ForestGreen;
+        public static SolidColorBrush ColorButtonCmdPush
+        {
+            get
+            {
+                return colorButtonCmdPush;
+            }
+            private set
+            {
+                colorButtonCmdPush = value;
+                OnStaticPropertyChanged("ColorButtonCmdPush");
+            }
+        }
+        private static SolidColorBrush colorButtonCmdPull = Brushes.IndianRed;
+        public static SolidColorBrush ColorButtonCmdPull
+        {
+            get
+            {
+                return colorButtonCmdPull;
+            }
+            private set
+            {
+                colorButtonCmdPull = value;
+                OnStaticPropertyChanged("ColorButtonCmdPull");
+            }
+        }
+        private static SolidColorBrush colorButtonCmdLift = Brushes.SkyBlue;
+        public static SolidColorBrush ColorButtonCmdLift
+        {
+            get
+            {
+                return colorButtonCmdLift;
+            }
+            private set
+            {
+                colorButtonCmdLift = value;
+                OnStaticPropertyChanged("ColorButtonCmdLift");
+            }
+        }
+        private static SolidColorBrush colorButtonCmdDrop = Brushes.SandyBrown;
+        public static SolidColorBrush ColorButtonCmdDrop
+        {
+            get
+            {
+                return colorButtonCmdDrop;
+            }
+            private set
+            {
+                colorButtonCmdDrop = value;
+                OnStaticPropertyChanged("ColorButtonCmdDrop");
+            }
+        }
+        private static SolidColorBrush colorButtonCmdDefault = Brushes.Black;
+        public static SolidColorBrush ColorButtonCmdDefault
+        {
+            get
+            {
+                return colorButtonCmdDefault;
+            }
+            private set
+            {
+                colorButtonCmdDefault = value;
+                OnStaticPropertyChanged("ColorButtonCmdDefault");
+            }
+        }
 
         // Button text
 
