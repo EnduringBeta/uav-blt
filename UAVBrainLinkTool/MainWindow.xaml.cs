@@ -85,7 +85,8 @@ namespace UAVBrainLinkTool
             Utils.updateStatusBarText(Constants.cmdPush);
 
             ContentPresenter cp = ButtonPush.Template.FindName("contentPresenter", ButtonPush) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonPush.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPush);
         }
 
         private void ButtonPull_Click(object sender, RoutedEventArgs e)
@@ -94,7 +95,8 @@ namespace UAVBrainLinkTool
             Utils.updateStatusBarText(Constants.cmdPull);
 
             ContentPresenter cp = ButtonPull.Template.FindName("contentPresenter", ButtonPull) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonPull.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdPull);
         }
 
         private void ButtonLift_Click(object sender, RoutedEventArgs e)
@@ -103,7 +105,8 @@ namespace UAVBrainLinkTool
             Utils.updateStatusBarText(Constants.cmdLift);
 
             ContentPresenter cp = ButtonLift.Template.FindName("contentPresenter", ButtonLift) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonLift.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdLift);
         }
 
         private void ButtonDrop_Click(object sender, RoutedEventArgs e)
@@ -112,7 +115,8 @@ namespace UAVBrainLinkTool
             Utils.updateStatusBarText(Constants.cmdDrop);
 
             ContentPresenter cp = ButtonDrop.Template.FindName("contentPresenter", ButtonDrop) as ContentPresenter;
-            cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
+            if (cp != null)
+                cp.SetValue(TextElement.ForegroundProperty, ButtonDrop.IsEnabled ? Constants.ColorButtonCmdDefault : Constants.ColorButtonCmdDrop);
         }
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
