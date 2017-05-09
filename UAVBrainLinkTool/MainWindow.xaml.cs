@@ -57,6 +57,8 @@ namespace UAVBrainLinkTool
             return true;
         }
 
+        // ContentPresenter results in "null" for some machines while the window is loading
+        // Checking if null to protect against early crash, but cannot color disabled button text at start if so
         private Boolean setDisabledCommandButtonTextColors()
         {
             // https://social.msdn.microsoft.com/Forums/vstudio/en-US/0d3d9b06-6855-4a91-bc2e-f1f0973e3b31/how-to-change-the-foreground-color-of-a-disabled-button-in-wpf
