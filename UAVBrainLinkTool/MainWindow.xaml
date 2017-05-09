@@ -26,19 +26,16 @@
         <TextBlock x:Name="TextBlockCurrentCommands" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="20" Width="489" TextAlignment="Center" Background="#FFC8C8C8" Height="27" VerticalAlignment="Bottom" Margin="10,0,0,193"
         	Text="{Binding Path=(local:Utils.StatusBarText)}"/>
         <Button x:Name="ButtonListen" HorizontalAlignment="Left" Width="160" FontSize="20" IsDefault="True" Height="50" VerticalAlignment="Bottom" Margin="10,0,0,138"
+                Content="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"
                 IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonListen_Click" ToolTip="Toggle listening and processing Emotiv EEG events">
-            <TextBlock Text="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"
-                       TextWrapping="Wrap" TextAlignment="Center" Height="auto"/>
         </Button>
         <Button x:Name="ButtonConnectUAV" Margin="175,0,175,138" FontSize="20" HorizontalAlignment="Center" Width="159" Height="50" VerticalAlignment="Bottom"
+                Content="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"
                 IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonConnectUAV_Click" ToolTip="Toggle connection to UAV">
-            <TextBlock Text="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"
-                       TextWrapping="Wrap" TextAlignment="Center" Height="auto"/>
         </Button>
         <Button x:Name="ButtonTransmit" Margin="0,0,10,138" FontSize="20" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="160"
+                Content="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
                 IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click" ToolTip="Toggle sending commands to connected UAV">
-            <TextBlock Text="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
-                       TextWrapping="Wrap" TextAlignment="Center" Height="auto"/>
         </Button>
         <Grid Margin="10,317,10,10" Background="LightBlue">
             <!--<oxy:PlotView Model="{Binding Path=(local:Plotting.EmotionPlotModel)}"/>-->
