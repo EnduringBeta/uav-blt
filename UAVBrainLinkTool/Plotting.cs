@@ -168,10 +168,10 @@ namespace UAVBrainLinkTool
                     return Constants.colorPlotCmdPush;
                 case Constants.cmdPull:
                     return Constants.colorPlotCmdPull;
-                case Constants.cmdRaise:
-                    return Constants.colorPlotCmdRaise;
-                case Constants.cmdLower:
-                    return Constants.colorPlotCmdLower;
+                case Constants.cmdLift:
+                    return Constants.colorPlotCmdLift;
+                case Constants.cmdDrop:
+                    return Constants.colorPlotCmdDrop;
                 case Constants.cmdNeutral: // Not currently used
                     return Constants.colorPlotCmdNeutral;
                 case Constants.thresholdTag:

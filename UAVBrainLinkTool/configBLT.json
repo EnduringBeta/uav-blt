@@ -5,8 +5,8 @@
         "scriptFileName": "UAVControlPython/EEGCommands.py",
         "MC_PUSH": "BLT_TARGETSELECTA",
         "MC_PULL": "BLT_TARGETSELECTB",
-        "MC_RAISE": "BLT_TAKEOFF",
-        "MC_LOWER": "BLT_LAND"
+        "MC_LIFT": "BLT_TAKEOFF",
+        "MC_DROP": "BLT_LAND"
     },
     "uavInfo": {
         "_comment": "Variables for configuring the Python script that controls the UAV",

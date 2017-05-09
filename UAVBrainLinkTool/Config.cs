@@ -80,8 +80,8 @@ namespace UAVBrainLinkTool
 
         public static String StringPush { get; private set; }
         public static String StringPull { get; private set; }
-        public static String StringRaise { get; private set; }
-        public static String StringLower { get; private set; }
+        public static String StringLift { get; private set; }
+        public static String StringDrop { get; private set; }
 
         public static int TakeoffAltitude { get; private set; }
         public static GeoCoordinates LocationA { get; private set; }
@@ -147,8 +147,8 @@ namespace UAVBrainLinkTool
 
                 StringPush = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdPush];
                 StringPull = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdPull];
-                StringRaise = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdRaise];
-                StringLower = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdLower];
+                StringLift = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdLift];
+                StringDrop = (String)ConfigJSON[Constants.configFieldCommandScriptInfo][Constants.cmdDrop];
             }
             catch (Exception ex)
             {

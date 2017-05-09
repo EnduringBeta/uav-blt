@@ -13,8 +13,8 @@
         <Grid Margin="374,10,10,225" IsEnabled="{Binding Path=(local:CommandComms.IsDeviceConnected)}">
             <Button x:Name="ButtonPush" Content="Push" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonPush_Click"/>
             <Button x:Name="ButtonPull" Content="Pull" HorizontalAlignment="Left" Margin="0,55,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonPull_Click"/>
-            <Button x:Name="ButtonRaise" Content="Raise" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonRaise_Click"/>
-            <Button x:Name="ButtonLower" Content="Lower" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonLower_Click"/>
+            <Button x:Name="ButtonLift" Content="Lift" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonLift_Click"/>
+            <Button x:Name="ButtonDrop" Content="Drop" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24" Click="ButtonDrop_Click"/>
         </Grid>
         <Grid Margin="10,10,140,225">
             <oxy:PlotView Model="{Binding Path=(local:Plotting.CommandPlotModel)}"/>

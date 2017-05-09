@@ -291,10 +291,10 @@ namespace UAVBrainLinkTool
                     return Config.StringPush;
                 case Constants.cmdPull:
                     return Config.StringPull;
-                case Constants.cmdRaise:
-                    return Config.StringRaise;
-                case Constants.cmdLower:
-                    return Config.StringLower;
+                case Constants.cmdLift:
+                    return Config.StringLift;
+                case Constants.cmdDrop:
+                    return Config.StringDrop;
                 default:
                     Logging.outputLine(String.Format("Warning: attempted to execute unknown command - {0}", commandString));
                     return "";

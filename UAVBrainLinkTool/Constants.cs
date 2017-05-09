@@ -53,8 +53,8 @@ namespace UAVBrainLinkTool
         public const String cmdNeutral  = "MC_NEUTRAL";
         public const String cmdPush     = "MC_PUSH";
         public const String cmdPull     = "MC_PULL";
-        public const String cmdRaise    = "MC_RAISE"; // TODO: Confirm correct string
-        public const String cmdLower    = "MC_LOWER"; // TODO: Confirm correct string
+        public const String cmdLift     = "MC_LIFT";
+        public const String cmdDrop     = "MC_DROP";
 
         public const String thresholdTag = "THRESHOLD";
 
@@ -84,16 +84,16 @@ namespace UAVBrainLinkTool
 
         public static OxyPlot.OxyColor colorPlotCmdPush    = OxyPlot.OxyColors.ForestGreen;
         public static OxyPlot.OxyColor colorPlotCmdPull    = OxyPlot.OxyColors.IndianRed;
-        public static OxyPlot.OxyColor colorPlotCmdRaise   = OxyPlot.OxyColors.SkyBlue;
-        public static OxyPlot.OxyColor colorPlotCmdLower   = OxyPlot.OxyColors.SandyBrown;
+        public static OxyPlot.OxyColor colorPlotCmdLift   = OxyPlot.OxyColors.SkyBlue;
+        public static OxyPlot.OxyColor colorPlotCmdDrop   = OxyPlot.OxyColors.SandyBrown;
         public static OxyPlot.OxyColor colorPlotCmdNeutral = OxyPlot.OxyColors.Black;
         public static OxyPlot.OxyColor colorPlotThreshold  = OxyPlot.OxyColors.Gray;
         public static OxyPlot.OxyColor colorPlotDefault    = OxyPlot.OxyColors.Black;
 
         public static SolidColorBrush colorButtonCmdPush  = Brushes.ForestGreen;
         public static SolidColorBrush colorButtonCmdPull  = Brushes.IndianRed;
-        public static SolidColorBrush colorButtonCmdRaise = Brushes.SkyBlue;
-        public static SolidColorBrush colorButtonCmdLower = Brushes.SandyBrown;
+        public static SolidColorBrush colorButtonCmdLift = Brushes.SkyBlue;
+        public static SolidColorBrush colorButtonCmdDrop = Brushes.SandyBrown;
 
         // Button text
 

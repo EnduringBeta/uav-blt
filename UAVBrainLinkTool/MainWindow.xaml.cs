@@ -42,8 +42,8 @@ namespace UAVBrainLinkTool
             // Use a property in code (like Utils.StatusBarText) for maximum flexibility.
             ButtonPush.Background = Constants.colorButtonCmdPush;
             ButtonPull.Background = Constants.colorButtonCmdPull;
-            ButtonRaise.Background = Constants.colorButtonCmdRaise;
-            ButtonLower.Background = Constants.colorButtonCmdLower;
+            ButtonLift.Background = Constants.colorButtonCmdLift;
+            ButtonDrop.Background = Constants.colorButtonCmdDrop;
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -64,16 +64,16 @@ namespace UAVBrainLinkTool
             Utils.updateStatusBarText(Constants.cmdPull);
         }
 
-        private void ButtonRaise_Click(object sender, RoutedEventArgs e)
+        private void ButtonLift_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.sendCommand(Constants.cmdRaise, CommandProcessing.ActiveCommandThreshold);
-            Utils.updateStatusBarText(Constants.cmdRaise);
+            CommandComms.sendCommand(Constants.cmdLift, CommandProcessing.ActiveCommandThreshold);
+            Utils.updateStatusBarText(Constants.cmdLift);
         }
 
-        private void ButtonLower_Click(object sender, RoutedEventArgs e)
+        private void ButtonDrop_Click(object sender, RoutedEventArgs e)
         {
-            CommandComms.sendCommand(Constants.cmdLower, CommandProcessing.ActiveCommandThreshold);
-            Utils.updateStatusBarText(Constants.cmdLower);
+            CommandComms.sendCommand(Constants.cmdDrop, CommandProcessing.ActiveCommandThreshold);
+            Utils.updateStatusBarText(Constants.cmdDrop);
         }
 
         private void ButtonListen_Click(object sender, RoutedEventArgs e)
