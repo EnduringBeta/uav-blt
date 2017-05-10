@@ -68,6 +68,14 @@ namespace UAVBrainLinkTool
 
         public const String thresholdTag = "THRESHOLD";
 
+        // Emotion-specific data
+
+        public const String alphaTag    = "Alpha";
+        public const String thetaTag    = "Theta";
+        public const String lowBetaTag  = "Low Beta";
+        public const String highBetaTag = "High Beta";
+        public const String gammaTag    = "Gamma";
+
         // Python script commands
 
         // These are only defined in the configuration file,
@@ -92,15 +100,23 @@ namespace UAVBrainLinkTool
 
         // Colors!
 
-        public static OxyPlot.OxyColor colorPlotCmdPush    = OxyPlot.OxyColors.ForestGreen;
-        public static OxyPlot.OxyColor colorPlotCmdPull    = OxyPlot.OxyColors.IndianRed;
-        public static OxyPlot.OxyColor colorPlotCmdLift   = OxyPlot.OxyColors.SkyBlue;
-        public static OxyPlot.OxyColor colorPlotCmdDrop   = OxyPlot.OxyColors.SandyBrown;
-        public static OxyPlot.OxyColor colorPlotCmdNeutral = OxyPlot.OxyColors.Black;
-        public static OxyPlot.OxyColor colorPlotThreshold  = OxyPlot.OxyColors.Gray;
-        public static OxyPlot.OxyColor colorPlotDefault    = OxyPlot.OxyColors.Black;
+        public static OxyPlot.OxyColor colorPlotCmdPush     = OxyPlot.OxyColors.ForestGreen;
+        public static OxyPlot.OxyColor colorPlotCmdPull     = OxyPlot.OxyColors.IndianRed;
+        public static OxyPlot.OxyColor colorPlotCmdLift     = OxyPlot.OxyColors.SkyBlue;
+        public static OxyPlot.OxyColor colorPlotCmdDrop     = OxyPlot.OxyColors.SandyBrown;
+        public static OxyPlot.OxyColor colorPlotCmdNeutral  = OxyPlot.OxyColors.Black;
+        public static OxyPlot.OxyColor colorPlotThreshold   = OxyPlot.OxyColors.Gray;
+        public static OxyPlot.OxyColor colorPlotDefault     = OxyPlot.OxyColors.Black;
+
+        public static OxyPlot.OxyColor colorPlotEmoTheta    = OxyPlot.OxyColors.DarkRed;
+        public static OxyPlot.OxyColor colorPlotEmoAlpha    = OxyPlot.OxyColors.LightGoldenrodYellow;
+        public static OxyPlot.OxyColor colorPlotEmoLowBeta  = OxyPlot.OxyColors.LightGreen;
+        public static OxyPlot.OxyColor colorPlotEmoHighBeta = OxyPlot.OxyColors.CadetBlue;
+        public static OxyPlot.OxyColor colorPlotEmoGamma    = OxyPlot.OxyColors.MediumPurple;
 
         // Button colors (properties for XAML)
+
+        // Commands
 
         private static SolidColorBrush colorButtonCmdPush = Brushes.ForestGreen;
         public static SolidColorBrush ColorButtonCmdPush
@@ -165,6 +181,74 @@ namespace UAVBrainLinkTool
             {
                 colorButtonCmdDefault = value;
                 OnStaticPropertyChanged("ColorButtonCmdDefault");
+            }
+        }
+
+        // Brain wave frequency ranges
+
+        private static SolidColorBrush colorButtonEmoTheta = Brushes.DarkRed;
+        public static SolidColorBrush ColorButtonEmoTheta
+        {
+            get
+            {
+                return colorButtonEmoTheta;
+            }
+            private set
+            {
+                colorButtonEmoTheta = value;
+                OnStaticPropertyChanged("ColorButtonEmoTheta");
+            }
+        }
+        private static SolidColorBrush colorButtonEmoAlpha = Brushes.LightGoldenrodYellow;
+        public static SolidColorBrush ColorButtonEmoAlpha
+        {
+            get
+            {
+                return colorButtonEmoAlpha;
+            }
+            private set
+            {
+                colorButtonEmoAlpha = value;
+                OnStaticPropertyChanged("ColorButtonEmoAlpha");
+            }
+        }
+        private static SolidColorBrush colorButtonEmoLowBeta = Brushes.LightGreen;
+        public static SolidColorBrush ColorButtonEmoLowBeta
+        {
+            get
+            {
+                return colorButtonEmoLowBeta;
+            }
+            private set
+            {
+                colorButtonEmoLowBeta = value;
+                OnStaticPropertyChanged("ColorButtonEmoLowBeta");
+            }
+        }
+        private static SolidColorBrush colorButtonEmoHighBeta = Brushes.CadetBlue;
+        public static SolidColorBrush ColorButtonEmoHighBeta
+        {
+            get
+            {
+                return colorButtonEmoHighBeta;
+            }
+            private set
+            {
+                colorButtonEmoHighBeta = value;
+                OnStaticPropertyChanged("ColorButtonEmoHighBeta");
+            }
+        }
+        private static SolidColorBrush colorButtonEmoGamma = Brushes.MediumPurple;
+        public static SolidColorBrush ColorButtonEmoGamma
+        {
+            get
+            {
+                return colorButtonEmoGamma;
+            }
+            private set
+            {
+                colorButtonEmoGamma = value;
+                OnStaticPropertyChanged("ColorButtonEmoGamma");
             }
         }
 

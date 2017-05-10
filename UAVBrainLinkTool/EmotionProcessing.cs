@@ -86,14 +86,25 @@ namespace UAVBrainLinkTool
 
             }
 
-            public EmotionDataPoint(double[] inputTheta, double[] inputAlpha, double[] inputLowBeta, double[] inputHighBeta, double[] inputGamma)
+            public EmotionDataPoint(double inputTheta, double inputAlpha, double inputLowBeta, double inputHighBeta, double inputGamma)
             {
-                theta       = inputTheta;
-                alpha       = inputAlpha;
-                lowBeta     = inputLowBeta;
-                highBeta    = inputHighBeta;
-                gamma       = inputGamma;
+                theta[0]       = inputTheta;
+                alpha[0]       = inputAlpha;
+                lowBeta[0]     = inputLowBeta;
+                highBeta[0]    = inputHighBeta;
+                gamma[0]       = inputGamma;
             }
+        }
+
+        // TODO: Process data to determine if stressed state is active, then add to plot data
+        public static Boolean addNewSample(EmotionDataPoint dp, float latestSampleTime)
+        {
+            // TODO: Check if stressed
+
+            // Update UI plot for appropriate command
+            EmotionPlotting.addPlotData(dp, latestSampleTime);
+
+            return true;
         }
     }
 }

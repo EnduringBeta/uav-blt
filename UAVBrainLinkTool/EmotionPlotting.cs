@@ -12,7 +12,7 @@ namespace UAVBrainLinkTool
     public static class EmotionPlotting
     {
         // TODO: Adjust
-        private static double emotionPlotRange = 10.0;
+        private static double emotionPlotRange = 500.0;
 
         private static double latestDataPointTime = 0.0;
 
@@ -22,7 +22,7 @@ namespace UAVBrainLinkTool
 
         public static Boolean initPlot()
         {
-            EmotionPlotModel = new PlotModel { Title = "Emotional State Plot" };
+            EmotionPlotModel = new PlotModel { Title = "Frequency Intensity Plot" };
             EmotionPlotData = new List<FunctionSeries>();
 
             // Set up axes
@@ -44,14 +44,23 @@ namespace UAVBrainLinkTool
             yAxis.MinimumRange = emotionPlotRange + 0.5;
             yAxis.IsPanEnabled = false;
             yAxis.IsZoomEnabled = false;
-            yAxis.Title = "Emotional Intensity";
+            yAxis.Title = "Frequency Intensity";
             EmotionPlotModel.Axes.Add(yAxis);
 
-            // TODO: Adjust
+            // TODO: Adjust and re-implement
             // Create threshold line
-            FunctionSeries thresholdLine = addDataSeries(Constants.thresholdTag);
-            thresholdLine.Points.Add(new DataPoint(0.0, CommandProcessing.ActiveCommandThreshold));
-            thresholdLine.Points.Add(new DataPoint(Plotting.plotTimeWindow, CommandProcessing.ActiveCommandThreshold));
+            //FunctionSeries thresholdLine = addDataSeries(Constants.thresholdTag);
+            //thresholdLine.Points.Add(new DataPoint(0.0, CommandProcessing.ActiveCommandThreshold));
+            //thresholdLine.Points.Add(new DataPoint(Plotting.plotTimeWindow, CommandProcessing.ActiveCommandThreshold));
+
+            addDataSeries(Constants.alphaTag);
+            addDataSeries(Constants.thetaTag);
+            addDataSeries(Constants.lowBetaTag);
+            addDataSeries(Constants.highBetaTag);
+            addDataSeries(Constants.gammaTag);
+
+            // Create initial data to display graph properly
+            addPlotData(new EmotionProcessing.EmotionDataPoint(0.0, 0.0, 0.0, 0.0, 0.0), (float)latestDataPointTime);
 
             return true;
         }
@@ -67,29 +76,42 @@ namespace UAVBrainLinkTool
             return newSeries;
         }
 
-        public static Boolean addPlotData(List<DataPoint> newData, String tag)
+        public static Boolean addPlotData(EmotionProcessing.EmotionDataPoint fullDP, float latestSampleTime)
         {
-            // Find proper series
-            FunctionSeries series = EmotionPlotData.Find(x => String.Compare((String)x.Tag, tag) == 0);
-
-            // If "series" still null, create new data series
-            if (series == null)
-                series = addDataSeries(tag);
-
-            Double newLatestTime = 0.0;
-            // Add new data points and
-            // find most recent data point in time
-            foreach (DataPoint newDP in newData)
+            // For each set of data tracking different brain wave frequency ranges
+            foreach (FunctionSeries series in EmotionPlotData)
             {
-                series.Points.Add(newDP);
+                DataPoint dp = new DataPoint(0.0, 0.0);
+                switch ((String)series.Tag)
+                {
+                    case Constants.thetaTag:
+                        dp = new DataPoint(latestSampleTime, fullDP.theta[0]);
+                        break;
+                    case Constants.alphaTag:
+                        dp = new DataPoint(latestSampleTime, fullDP.alpha[0]);
+                        break;
+                    case Constants.lowBetaTag:
+                        dp = new DataPoint(latestSampleTime, fullDP.lowBeta[0]);
+                        break;
+                    case Constants.highBetaTag:
+                        dp = new DataPoint(latestSampleTime, fullDP.highBeta[0]);
+                        break;
+                    case Constants.gammaTag:
+                        dp = new DataPoint(latestSampleTime, fullDP.gamma[0]);
+                        break;
+                    default:
+                        break;
+                }
 
-                if (newDP.X > newLatestTime)
-                    newLatestTime = newDP.X;
+                // Add particular frequency range data to its series
+                series.Points.Add(dp);
             }
 
-            removeOldData(newLatestTime);
+            // Remove data outside of plot window using new timestamp
+            removeOldData(latestDataPointTime);
 
-            latestDataPointTime = newLatestTime;
+            // Save latest timestamp
+            latestDataPointTime = latestSampleTime;
 
             // Update plot
             EmotionPlotModel.InvalidatePlot(true);
@@ -109,15 +131,7 @@ namespace UAVBrainLinkTool
                 foreach (DataPoint dp in fs.Points)
                 {
                     if (dp.X < newLatestTime - Plotting.plotTimeWindow)
-                    {
-                        if (String.Compare((String)fs.Tag, Constants.thresholdTag) == 0)
-                        {
-                            updateThresholdSeries(newLatestTime);
-                            break;
-                        }
-                        else
-                            lastOldIndex = fs.Points.IndexOf(dp);
-                    }
+                        lastOldIndex = fs.Points.IndexOf(dp);
                     else
                         break;
                 }
@@ -147,6 +161,7 @@ namespace UAVBrainLinkTool
             return true;
         }
 
+        /*
         private static Boolean updateThresholdSeries(double newLatestTime)
         {
             FunctionSeries thresholdLine = EmotionPlotData.Find(x => String.Compare((String)x.Tag, Constants.thresholdTag) == 0);
@@ -155,23 +170,22 @@ namespace UAVBrainLinkTool
 
             return true;
         }
+        */
 
         private static OxyColor getSeriesColor(String tag)
         {
             switch (tag)
             {
-                case Constants.cmdPush:
-                    return Constants.colorPlotCmdPush;
-                case Constants.cmdPull:
-                    return Constants.colorPlotCmdPull;
-                case Constants.cmdLift:
-                    return Constants.colorPlotCmdLift;
-                case Constants.cmdDrop:
-                    return Constants.colorPlotCmdDrop;
-                case Constants.cmdNeutral: // Not currently used
-                    return Constants.colorPlotCmdNeutral;
-                case Constants.thresholdTag:
-                    return Constants.colorPlotThreshold;
+                case Constants.thetaTag:
+                    return Constants.colorPlotEmoTheta;
+                case Constants.alphaTag:
+                    return Constants.colorPlotEmoAlpha;
+                case Constants.lowBetaTag:
+                    return Constants.colorPlotEmoLowBeta;
+                case Constants.highBetaTag:
+                    return Constants.colorPlotEmoHighBeta;
+                case Constants.gammaTag:
+                    return Constants.colorPlotEmoGamma;
                 default:
                     return Constants.colorPlotDefault;
             }

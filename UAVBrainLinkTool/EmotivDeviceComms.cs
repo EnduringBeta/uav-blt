@@ -232,7 +232,7 @@ namespace UAVBrainLinkTool
             engine.ProcessEvents(eventMillisecondProcessingTime);
 
             // Process averaged band powers for emotional/stressed state
-            processAverageBandPowers();
+            processAverageBandPowers(CommandProcessing.LatestSampleTime);
 
             // Increment counter tracking time
             TotalListeningTicks++;
@@ -296,7 +296,7 @@ namespace UAVBrainLinkTool
         }
 
         // Get and process averaged EEG data for tracking emotional/stressed state
-        private static Boolean processAverageBandPowers()
+        private static Boolean processAverageBandPowers(float latestSampleTime)
         {
             for (int i = 0; i < EmotionProcessing.EmotivChannelList.Length; i++)
             {
@@ -309,7 +309,8 @@ namespace UAVBrainLinkTool
                         Logging.outputLine(String.Format("Received EEG: [{5,7}]\tT - {0,8:N2}\tA - {1,8:N2}\tb - {2,8:N2}\tB - {3,8:N2}\tG - {4,8:N}",
                             dp.theta[0], dp.alpha[0], dp.lowBeta[0], dp.highBeta[0], dp.gamma[0], EmotionProcessing.EmotivChannelList[i]));
 
-                    // TODO: Store data
+                    // Process and plot data
+                    EmotionProcessing.addNewSample(dp, latestSampleTime);
                 }
             }
 

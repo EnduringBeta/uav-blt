@@ -40,7 +40,20 @@
                 Content="{Binding Path=(local:CommandProcessing.MonitorStress), Converter={StaticResource boolToMonitorStressTextConverter}}"
                 IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonMonitorStress_Click" ToolTip="Toggle to monitor stressful state"/>
         </StackPanel>
-        <!--<oxy:PlotView Model="{Binding Path=(local:EmotionPlotting.EmotionPlotModel)}"/>-->
-        <TextBlock Text="Emotion Graph" TextAlignment="Center" VerticalAlignment="Center" FontSize="24" Background="LightBlue" Height="150" Margin="5"/>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <oxy:PlotView Model="{Binding Path=(local:EmotionPlotting.EmotionPlotModel)}" Width="535" HorizontalAlignment="Left" Margin="5"/>
+            <StackPanel Margin="5">
+                <TextBlock Text="Theta" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Padding="5" Margin="5"
+                           Background="{Binding Path=(local:Constants.ColorButtonEmoTheta)}"/>
+                <TextBlock Text="Alpha" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Padding="5" Margin="5"
+                           Background="{Binding Path=(local:Constants.ColorButtonEmoAlpha)}"/>
+                <TextBlock Text="Low Beta" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Padding="5" Margin="5"
+                           Background="{Binding Path=(local:Constants.ColorButtonEmoLowBeta)}"/>
+                <TextBlock Text="High Beta" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Padding="5" Margin="5"
+                           Background="{Binding Path=(local:Constants.ColorButtonEmoHighBeta)}"/>
+                <TextBlock Text="Gamma" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Padding="5" Margin="5"
+                           Background="{Binding Path=(local:Constants.ColorButtonEmoGamma)}"/>
+            </StackPanel>
+        </StackPanel>
     </StackPanel>
 </Window>
