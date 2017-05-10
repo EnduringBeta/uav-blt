@@ -34,7 +34,7 @@ namespace UAVBrainLinkTool
                 Logging.outputLine("Error: failure when reading configuration file!");
 
             // Initialize plot before referencing it in XAML
-            Plotting.initPlot();
+            Plotting.init();
 
             InitializeComponent();
         }
@@ -148,6 +148,18 @@ namespace UAVBrainLinkTool
             }
         }
 
+        private void ButtonMonitorStress_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommandProcessing.MonitorStress)
+            {
+                CommandProcessing.MonitorStress = false;
+            }
+            else
+            {
+                CommandProcessing.MonitorStress = true;
+            }
+        }
+
         // TODO: Update status bar
         private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)
         {
@@ -200,6 +212,21 @@ namespace UAVBrainLinkTool
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (bool)value ? Constants.disconnectFromUAV : Constants.connectToUAV;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    // Convert Boolean for "Monitor Stress" button to text
+    public class BoolToMonitorStressTextConverter : IValueConverter
+    {
+        // Flag: true for connected, false for disconnected
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Constants.stopMonitoringStress : Constants.startMonitoringStress;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

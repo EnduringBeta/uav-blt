@@ -101,7 +101,7 @@ namespace UAVBrainLinkTool
                 success = Config.importConfig();
 
             if (forcePlotReload)
-                success = Plotting.initPlot();
+                success = CommandPlotting.initPlot();
 
             if (success)
                 success = initEmotivDevice();

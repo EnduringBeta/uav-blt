@@ -64,6 +64,20 @@ namespace UAVBrainLinkTool
             }
         }
 
+        private static Boolean monitorStress = false;
+        public static Boolean MonitorStress
+        {
+            get
+            {
+                return monitorStress;
+            }
+            set
+            {
+                monitorStress = value;
+                OnStaticPropertyChanged("MonitorStress");
+            }
+        }
+
         public class CommandObject
         {
             public EdkDll.IEE_MentalCommandAction_t command;
@@ -119,7 +133,7 @@ namespace UAVBrainLinkTool
                 // Update UI plot for appropriate command
                 List<DataPoint> plotDP = new List<DataPoint>();
                 plotDP.Add(new DataPoint((double)newSampleTime, (double)power));
-                Plotting.addPlotData(plotDP, this.command.ToString());
+                CommandPlotting.addPlotData(plotDP, this.command.ToString());
 
                 updateExceedsThreshold();
 

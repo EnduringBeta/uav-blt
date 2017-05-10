@@ -8,38 +8,39 @@
         <local:BoolToListeningTextConverter x:Key="boolToListeningTextConverter" />
         <local:BoolToTransmittingTextConverter x:Key="boolToTransmittingTextConverter" />
         <local:BoolToConnectUAVTextConverter x:Key="boolToConnectUAVTextConverter" />
+        <local:BoolToMonitorStressTextConverter x:Key="boolToMonitorStressTextConverter" />
     </Window.Resources>
-    <Grid Height="450">
-        <Grid Margin="10,10,140,225">
-            <oxy:PlotView Model="{Binding Path=(local:Plotting.CommandPlotModel)}"/>
-        </Grid>
-        <Grid Margin="374,10,10,225" IsEnabled="{Binding Path=(local:CommandComms.IsDeviceConnected)}">
-            <Button x:Name="ButtonPush" Content="Push" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Height="50" FontSize="24"
+    <StackPanel Margin="5">
+        <StackPanel Orientation="Horizontal">
+            <oxy:PlotView Model="{Binding Path=(local:CommandPlotting.CommandPlotModel)}" Width="535" Margin="5"/>
+            <StackPanel IsEnabled="{Binding Path=(local:CommandComms.IsDeviceConnected)}" Margin="5">
+                <Button x:Name="ButtonPush" Content="Push" Width="125" Height="50" FontSize="24" Margin="0,0,0,5"
                     Click="ButtonPush_Click" Background="{Binding Path=(local:Constants.ColorButtonCmdPush)}"/>
-            <Button x:Name="ButtonPull" Content="Pull" HorizontalAlignment="Left" Margin="0,55,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24"
-                    Click="ButtonPull_Click" Background="{Binding Path=(local:Constants.ColorButtonCmdPull)}"></Button>
-            <Button x:Name="ButtonLift" Content="Lift" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24"
+                <Button x:Name="ButtonPull" Content="Pull" Width="125" Height="50" FontSize="24" Margin="0,5,0,5"
+                    Click="ButtonPull_Click" Background="{Binding Path=(local:Constants.ColorButtonCmdPull)}"/>
+                <Button x:Name="ButtonLift" Content="Lift" Width="125" Height="50" FontSize="24" Margin="0,5,0,5"
                     Click="ButtonLift_Click" Background="{Binding Path=(local:Constants.ColorButtonCmdLift)}"/>
-            <Button x:Name="ButtonDrop" Content="Drop" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Width="125" Height="50" FontSize="24"
+                <Button x:Name="ButtonDrop" Content="Drop" Width="125" Height="50" FontSize="24" Margin="0,5,0,0"
                     Click="ButtonDrop_Click" Background="{Binding Path=(local:Constants.ColorButtonCmdDrop)}"/>
-        </Grid>
-        <TextBlock x:Name="TextBlockCurrentCommands" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="20" Width="489" TextAlignment="Center" Background="#FFC8C8C8" Height="27" VerticalAlignment="Bottom" Margin="10,0,0,193"
+            </StackPanel>
+        </StackPanel>
+        <TextBlock x:Name="TextBlockCurrentCommands" TextWrapping="Wrap" FontSize="20" TextAlignment="Center" Background="#FFC8C8C8" Margin="5"
         	Text="{Binding Path=(local:Utils.StatusBarText)}"/>
-        <Button x:Name="ButtonListen" HorizontalAlignment="Left" Width="160" FontSize="20" IsDefault="True" Height="50" VerticalAlignment="Bottom" Margin="10,0,0,138"
+        <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Center">
+            <Button x:Name="ButtonListen" FontSize="20" Height="50" Width="160" IsDefault="True" Margin="5"
                 Content="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonListen_Click" ToolTip="Toggle listening and processing Emotiv EEG events">
-        </Button>
-        <Button x:Name="ButtonConnectUAV" Margin="175,0,175,138" FontSize="20" HorizontalAlignment="Center" Width="159" Height="50" VerticalAlignment="Bottom"
+                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonListen_Click" ToolTip="Toggle listening and processing Emotiv EEG events"/>
+            <Button x:Name="ButtonConnectUAV" FontSize="20" Height="50" Width="160" Margin="5"
                 Content="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonConnectUAV_Click" ToolTip="Toggle connection to UAV">
-        </Button>
-        <Button x:Name="ButtonTransmit" Margin="0,0,10,138" FontSize="20" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="160"
+                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonConnectUAV_Click" ToolTip="Toggle connection to UAV"/>
+            <Button x:Name="ButtonTransmit" FontSize="20" Height="50" Width="160" Margin="5"
                 Content="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click" ToolTip="Toggle sending commands to connected UAV">
-        </Button>
-        <Grid Margin="10,317,10,10" Background="LightBlue">
-            <!--<oxy:PlotView Model="{Binding Path=(local:Plotting.EmotionPlotModel)}"/>-->
-            <TextBlock Text="Emotion Graph" TextAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
-        </Grid>
-    </Grid>
+                IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click" ToolTip="Toggle sending commands to connected UAV"/>
+            <Button x:Name="ButtonMonitorStress" FontSize="20" Height="50" Width="160" Margin="5"
+                Content="{Binding Path=(local:CommandProcessing.MonitorStress), Converter={StaticResource boolToMonitorStressTextConverter}}"
+                IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonMonitorStress_Click" ToolTip="Toggle to monitor stressful state"/>
+        </StackPanel>
+        <!--<oxy:PlotView Model="{Binding Path=(local:EmotionPlotting.EmotionPlotModel)}"/>-->
+        <TextBlock Text="Emotion Graph" TextAlignment="Center" VerticalAlignment="Center" FontSize="24" Background="LightBlue" Height="150" Margin="5"/>
+    </StackPanel>
 </Window>
