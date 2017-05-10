@@ -52,7 +52,7 @@ namespace UAVBrainLinkTool
 
             if (EmotivCloudClient.EC_LoadUserProfile(userCloudID, 0, profileID, Constants.version) == EdkDll.EDK_OK)
             {
-                Logging.outputLine("Profile loading completed.");
+                Logging.outputLine("Profile loading completed");
                 return true;
             }
             else

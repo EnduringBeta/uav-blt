@@ -29,6 +29,20 @@ namespace UAVBrainLinkTool
                 handler(null, new PropertyChangedEventArgs(propertyName));
         }
 
+        private static uint emotivUserID = 0;
+        public static uint EmotivUserID
+        {
+            get
+            {
+                return emotivUserID;
+            }
+            set
+            {
+                emotivUserID = value;
+                OnStaticPropertyChanged("EmotivUserID");
+            }
+        }
+
         private static Boolean isListening = false;
         public static Boolean IsListening
         {
@@ -90,7 +104,7 @@ namespace UAVBrainLinkTool
         public static Boolean initialize()
         {
             engine = EmoEngine.Instance;
-            Logging.outputLine("Emo engine initialized.");
+            Logging.outputLine("Emo engine initialized");
             return true;
         }
 
@@ -113,6 +127,8 @@ namespace UAVBrainLinkTool
 
             engine.MentalCommandEmoStateUpdated +=
                 new EmoEngine.MentalCommandEmoStateUpdatedEventHandler(EmotivDeviceEvents.engine_MentalCommandEmoStateUpdated);
+
+            /*
             engine.MentalCommandTrainingStarted +=
                 new EmoEngine.MentalCommandTrainingStartedEventEventHandler(EmotivDeviceEvents.engine_MentalCommandTrainingStarted);
             engine.MentalCommandTrainingSucceeded +=
@@ -121,8 +137,9 @@ namespace UAVBrainLinkTool
                 new EmoEngine.MentalCommandTrainingCompletedEventHandler(EmotivDeviceEvents.engine_MentalCommandTrainingCompleted);
             engine.MentalCommandTrainingRejected +=
                 new EmoEngine.MentalCommandTrainingRejectedEventHandler(EmotivDeviceEvents.engine_MentalCommandTrainingRejected);
+            */
 
-            Logging.outputLine("Emo engine events hooked.");
+            Logging.outputLine("Emo engine events hooked");
 
             return true;
         }
@@ -190,7 +207,7 @@ namespace UAVBrainLinkTool
             listenTimer.Stop();
 
             IsListening = false;
-            Logging.outputLine("Stopped listening.");
+            Logging.outputLine("Stopped listening");
 
             Utils.updateStatusBarText(Constants.noActiveCommands);
 
@@ -206,12 +223,17 @@ namespace UAVBrainLinkTool
             return true;
         }
 
+        // Periodically-executed function that processes Emotiv events
         private static void listenTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             EventsProcessedThisInterval = 0;
 
             // Process any raw events from device
             engine.ProcessEvents(eventMillisecondProcessingTime);
+
+            // Process averaged band powers for emotional/stressed state
+            processAverageBandPowers();
+
             // Increment counter tracking time
             TotalListeningTicks++;
 
@@ -271,6 +293,27 @@ namespace UAVBrainLinkTool
             if (ListeningMillisecondLength > 0 &&
                 TotalListeningTicks * listeningMillisecondInterval >= ListeningMillisecondLength)
                 stopListening();
+        }
+
+        // Get and process averaged EEG data for tracking emotional/stressed state
+        private static Boolean processAverageBandPowers()
+        {
+            for (int i = 0; i < EmotionProcessing.EmotivChannelList.Length; i++)
+            {
+                EmotionProcessing.EmotionDataPoint dp = new EmotionProcessing.EmotionDataPoint();
+
+                if (engine.IEE_GetAverageBandPowers(EmotivUserID, EmotionProcessing.EmotivChannelList[i], dp.theta, dp.alpha, dp.lowBeta, dp.highBeta, dp.gamma) == EdkDll.EDK_OK)
+                {
+                    // Optionally print
+                    if (Constants.logIndividualEmotivEmotionEvents)
+                        Logging.outputLine(String.Format("Received EEG: [{5,7}]\tT - {0,8:N2}\tA - {1,8:N2}\tb - {2,8:N2}\tB - {3,8:N2}\tG - {4,8:N}",
+                            dp.theta[0], dp.alpha[0], dp.lowBeta[0], dp.highBeta[0], dp.gamma[0], EmotionProcessing.EmotivChannelList[i]));
+
+                    // TODO: Store data
+                }
+            }
+
+            return true;
         }
     }
 }

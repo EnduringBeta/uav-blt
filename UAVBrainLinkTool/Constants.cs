@@ -23,7 +23,8 @@ namespace UAVBrainLinkTool
         public const int version = -1;
 
         public const Boolean logToConsole = true;
-        public const Boolean logIndividualEmotivDataPoints = false;
+        public const Boolean logIndividualEmotivCommandEvents = false;
+        public const Boolean logIndividualEmotivEmotionEvents = true;
 
         // Config fields
 

@@ -11,22 +11,28 @@ namespace UAVBrainLinkTool
     {
         public static void engine_EmoEngineConnected(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine("Emo engine connected.");
+            Logging.outputLine("Emo engine connected");
         }
 
         public static void engine_EmoEngineDisconnected(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine("Emo engine disconnected.");
+            Logging.outputLine("Emo engine disconnected");
         }
 
         public static void engine_UserAdded(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine(String.Format("User added ({0})", e.userId));
+            Logging.outputLine(String.Format("User added (ID: {0})", e.userId));
+
+            // Store user ID for further configuration
+            EmotivDeviceComms.EmotivUserID = e.userId;
+
+            // Set up emotion data transmission
+            EmoEngine.Instance.IEE_FFTSetWindowingType(EmotivDeviceComms.EmotivUserID, EdkDll.IEE_WindowingTypes.IEE_HAMMING);
         }
 
         public static void engine_UserRemoved(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine(String.Format("User removed ({0})", e.userId));
+            Logging.outputLine(String.Format("User removed (ID: {0})", e.userId));
         }
 
         public static void engine_EmoStateUpdated(object sender, EmoStateUpdatedEventArgs e)
@@ -60,14 +66,15 @@ namespace UAVBrainLinkTool
             Single power = es.MentalCommandGetCurrentActionPower();
             Boolean isActive = es.MentalCommandIsActive();
 
-            if (Constants.logIndividualEmotivDataPoints)
-                Logging.outputLine(String.Format("Received:\t\t{0,15}\t{1,10:N2}\t{2,10:N2}s\t{3,8}", cogAction, power, timeFromStart, isActive ? "Active" : "Inactive"));
+            if (Constants.logIndividualEmotivCommandEvents)
+                Logging.outputLine(String.Format("Received command:\t\t{0,15}\t{1,10:N2}\t{2,10:N2}s\t{3,8}", cogAction, power, timeFromStart, isActive ? "Active" : "Inactive"));
 
             EmotivDeviceComms.EventsProcessedThisInterval++;
 
             CommandProcessing.updateCommandObjects(timeFromStart, cogAction, power, isActive);
         }
 
+        /*
         public static void engine_MentalCommandTrainingStarted(object sender, EmoEngineEventArgs e)
         {
             Logging.outputLine("Start MentalCommand Training");
@@ -75,7 +82,7 @@ namespace UAVBrainLinkTool
 
         public static void engine_MentalCommandTrainingSucceeded(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine("MentalCommand Training Success. (A)ccept/Reject?");
+            Logging.outputLine("MentalCommand training success. (A)ccept/Reject?");
             ConsoleKeyInfo cki = Console.ReadKey(true);
             if (cki.Key == ConsoleKey.A)
             {
@@ -90,12 +97,13 @@ namespace UAVBrainLinkTool
 
         public static void engine_MentalCommandTrainingCompleted(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine("MentalCommand Training Completed.");
+            Logging.outputLine("MentalCommand training completed");
         }
 
         public static void engine_MentalCommandTrainingRejected(object sender, EmoEngineEventArgs e)
         {
-            Logging.outputLine("MentalCommand Training Rejected.");
+            Logging.outputLine("MentalCommand training rejected");
         }
+        */
     }
 }
