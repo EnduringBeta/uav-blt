@@ -30,17 +30,32 @@ namespace UAVBrainLinkTool
         }
 
         // Check for events 5 times per second
-        private static Single listeningMillisecondInterval = 200;
-        public static Single ListeningMillisecondInterval
+        private static Single listeningCommandMillisecondInterval = 200;
+        public static Single ListeningCommandMillisecondInterval
         {
             get
             {
-                return listeningMillisecondInterval;
+                return listeningCommandMillisecondInterval;
             }
             private set
             {
-                listeningMillisecondInterval = value;
-                OnStaticPropertyChanged("ListeningMillisecondInterval");
+                listeningCommandMillisecondInterval = value;
+                OnStaticPropertyChanged("ListeningCommandMillisecondInterval");
+            }
+        }
+
+        // Check for EEG frequency 5 times per second
+        private static Single listeningEmotionMillisecondInterval = 400;
+        public static Single ListeningEmotionMillisecondInterval
+        {
+            get
+            {
+                return listeningEmotionMillisecondInterval;
+            }
+            private set
+            {
+                listeningEmotionMillisecondInterval = value;
+                OnStaticPropertyChanged("ListeningEmotionMillisecondInterval");
             }
         }
 
@@ -237,7 +252,7 @@ namespace UAVBrainLinkTool
         {
             listenCommandTimer = new System.Timers.Timer();
             listenCommandTimer.Elapsed += listenCommandTimer_Elapsed;
-            listenCommandTimer.Interval = ListeningMillisecondInterval;
+            listenCommandTimer.Interval = ListeningCommandMillisecondInterval;
 
             return true;
         }
@@ -246,7 +261,7 @@ namespace UAVBrainLinkTool
         {
             listenEmotionTimer = new System.Timers.Timer();
             listenEmotionTimer.Elapsed += listenEmotionTimer_Elapsed;
-            listenEmotionTimer.Interval = ListeningMillisecondInterval;
+            listenEmotionTimer.Interval = ListeningEmotionMillisecondInterval;
 
             return true;
         }
@@ -259,18 +274,15 @@ namespace UAVBrainLinkTool
             // Process any raw events from device
             engine.ProcessEvents(eventMillisecondProcessingTime);
 
-            // Process averaged band powers for emotional/stressed state
-            //processAverageBandPowers(CommandProcessing.LatestSampleTime);
-
             // Increment counter tracking time
             TotalListeningTicks++;
 
             // If no events were processed
             if (EventsProcessedThisInterval == 0)
             {
-                // Decay command power by ListeningMillisecondInterval
+                // Decay command power by ListeningCommandMillisecondInterval
                 CommandProcessing.updateCommandObjects(CommandProcessing.LatestSampleTime
-                    + (ListeningMillisecondInterval / Constants.millisecondsInSeconds));
+                    + (ListeningCommandMillisecondInterval / Constants.millisecondsInSeconds));
             }
 
             // Print out cumulative command powers occasionally
@@ -319,7 +331,7 @@ namespace UAVBrainLinkTool
 
             // If total listening time is set and has expired, stop
             if (ListeningMillisecondLength > 0 &&
-                TotalListeningTicks * ListeningMillisecondInterval >= ListeningMillisecondLength)
+                TotalListeningTicks * ListeningCommandMillisecondInterval >= ListeningMillisecondLength)
                 stopListening();
         }
 
@@ -327,21 +339,11 @@ namespace UAVBrainLinkTool
         private static void listenEmotionTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             // Process averaged band powers for emotional/stressed state
-            processAverageBandPowers(CommandProcessing.LatestSampleTime);
-
-            // If total listening time is set and has expired, stop
-            if (ListeningMillisecondLength > 0 &&
-                TotalListeningTicks * ListeningMillisecondInterval >= ListeningMillisecondLength)
-                stopListening();
-        }
-
-        // Get and process averaged EEG data for tracking emotional/stressed state
-        private static Boolean processAverageBandPowers(float latestSampleTime)
-        {
             for (int i = 0; i < EmotionProcessing.EmotivChannelList.Length; i++)
             {
                 EmotionProcessing.EmotionDataPoint dp = new EmotionProcessing.EmotionDataPoint();
 
+                // Get and process averaged EEG data for tracking emotional/stressed state
                 if (engine.IEE_GetAverageBandPowers(EmotivUserID, EmotionProcessing.EmotivChannelList[i], dp.theta, dp.alpha, dp.lowBeta, dp.highBeta, dp.gamma) == EdkDll.EDK_OK)
                 {
                     // Optionally print
@@ -350,11 +352,14 @@ namespace UAVBrainLinkTool
                             dp.theta[0], dp.alpha[0], dp.lowBeta[0], dp.highBeta[0], dp.gamma[0], EmotionProcessing.EmotivChannelList[i]));
 
                     // Process and plot data
-                    EmotionProcessing.addNewSample(dp, latestSampleTime);
+                    EmotionProcessing.addNewSample(dp, CommandProcessing.LatestSampleTime);
                 }
             }
 
-            return true;
+            // If total listening time is set and has expired, stop
+            if (ListeningMillisecondLength > 0 &&
+                TotalListeningTicks * ListeningEmotionMillisecondInterval >= ListeningMillisecondLength)
+                stopListening();
         }
     }
 }
