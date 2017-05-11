@@ -1,5 +1,9 @@
 {
     "_comment": "Configuration file for the UAV Brain Link Tool (BLT)",
+    "logging": {
+        "logIndividualEmotivCommandEvents": false,
+        "logIndividualEmotivEmotionEvents": true
+    },
     "commandScriptInfo": {
         "_comment": "Python script path and strings to execute specific mental commands",
         "scriptFileName": "UAVControlPython/EEGCommands.py",

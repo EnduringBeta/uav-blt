@@ -22,20 +22,24 @@ namespace UAVBrainLinkTool
 
         public const int version = -1;
 
+        // Logging
+
         public const Boolean logToConsole = true;
-        public const Boolean logIndividualEmotivCommandEvents = false;
-        public const Boolean logIndividualEmotivEmotionEvents = false;
 
         // Config fields
 
         public const String configFileLoc = "./";
         public const String configFileName = "configBLT.json";
 
+        public const String configFieldLogging = "logging";
         public const String configFieldCommandScriptInfo = "commandScriptInfo";
         public const String configFieldUAVInfo = "uavInfo";
         public const String configFieldUserInfo = "userInfo";
         public const String configFieldCommandThresholds = "commandPower";
         public const String configFieldStress = "stress";
+
+        public const String configFieldLogIndividualEmotivCommandEvents = "logIndividualEmotivCommandEvents";
+        public const String configFieldLogIndividualEmotivEmotionEvents = "logIndividualEmotivEmotionEvents";
 
         public const String configFieldScriptFileName = "scriptFileName";
 

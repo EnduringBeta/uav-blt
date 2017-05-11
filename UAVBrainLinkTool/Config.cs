@@ -121,6 +121,8 @@ namespace UAVBrainLinkTool
             }
 
             if (success)
+                success = getLogging();
+            if (success)
                 success = getCommandInfo();
             if (success)
                 success = getUAVInfo();
@@ -137,6 +139,24 @@ namespace UAVBrainLinkTool
                 ConfigLoaded = false;
 
             return ConfigLoaded;
+        }
+
+        private static Boolean getLogging()
+        {
+            Boolean success = true;
+
+            try
+            {
+                Logging.LogIndividualEmotivCommandEvents = (Boolean)ConfigJSON[Constants.configFieldLogging][Constants.configFieldLogIndividualEmotivCommandEvents];
+                Logging.LogIndividualEmotivEmotionEvents = (Boolean)ConfigJSON[Constants.configFieldLogging][Constants.configFieldLogIndividualEmotivEmotionEvents];
+            }
+            catch (Exception ex)
+            {
+                Logging.outputLine("Config read exception - logging: " + ex.Message);
+                return false;
+            }
+
+            return success;
         }
 
         private static Boolean getCommandInfo()
@@ -242,7 +262,7 @@ namespace UAVBrainLinkTool
             }
             catch (Exception ex)
             {
-                Logging.outputLine("Config read exception - stress factor: " + ex.Message);
+                Logging.outputLine("Config read exception - stress: " + ex.Message);
                 return false;
             }
 

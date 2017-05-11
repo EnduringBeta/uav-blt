@@ -13,6 +13,9 @@ namespace UAVBrainLinkTool
         static String logFileName = String.Format(logsDirectory + "BLT_Log_{0}.txt", DateTime.UtcNow.ToString(Constants.dateTimeFormat));
         static System.IO.StreamWriter log;
 
+        public static Boolean LogIndividualEmotivCommandEvents { get; set; }
+        public static Boolean LogIndividualEmotivEmotionEvents { get; set; }
+
         static Logging()
         {
             if (!Directory.Exists(logsDirectory))

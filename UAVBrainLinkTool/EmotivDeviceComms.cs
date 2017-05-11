@@ -347,7 +347,7 @@ namespace UAVBrainLinkTool
                 if (engine.IEE_GetAverageBandPowers(EmotivUserID, EmotionProcessing.EmotivChannelList[i], dp.theta, dp.alpha, dp.lowBeta, dp.highBeta, dp.gamma) == EdkDll.EDK_OK)
                 {
                     // Optionally print
-                    if (Constants.logIndividualEmotivEmotionEvents)
+                    if (Logging.LogIndividualEmotivEmotionEvents)
                         Logging.outputLine(String.Format("Received EEG: [{5,7}]\tT - {0,8:N2}\tA - {1,8:N2}\tb - {2,8:N2}\tB - {3,8:N2}\tG - {4,8:N}",
                             dp.theta[0], dp.alpha[0], dp.lowBeta[0], dp.highBeta[0], dp.gamma[0], EmotionProcessing.EmotivChannelList[i]));
 
