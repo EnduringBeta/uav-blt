@@ -30,9 +30,21 @@
         "profileName": "My Profile"
     },
     "commandPower": {
-        "_comment": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive and the percentage of power a command is reduced to after being sent, to reduce spam",
+        "_commentCommandThresholds": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
         "activeCommandThreshold": 11,
         "inactiveCommandThreshold": 9,
-        "commandSentPowerPercentage": 25
+        "_commentCommandSentPowerPercentage": "The percentage of power a command is reduced to after being sent, to reduce spam",
+        "commandSentPowerPercentage": 25,
+        "_commentSampleTimeWindow": "The window in which past sent commands affect the total command power, in seconds (similar to decay rate)",
+        "sampleTimeWindow": 3
+    },
+    "stress": {
+        "_commentStressThresholds": "Asymmetrical power thresholds above and below (respectively) which the program considers the user stressed",
+        "activeStressThreshold": 6,
+        "inactiveStressThreshold": 4,
+        "_commentStressFactor": "The percentage the command thresholds increase when user is identified as stressed",
+        "stressFactor": 50,
+        "_commentStressTimeWindow": "The window in which past emotional states affect the stress factor, in seconds (similar to decay rate)",
+        "stressTimeWindow": 5
     }
 }

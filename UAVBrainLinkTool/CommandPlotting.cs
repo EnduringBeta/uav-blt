@@ -11,7 +11,7 @@ namespace UAVBrainLinkTool
 {
     public static class CommandPlotting
     {
-        private const double thresholdViewMultiplier = 1.5;
+        private const double thresholdViewMultiplier = 2;
 
         private static double latestDataPointTime = 0.0;
 
@@ -149,11 +149,22 @@ namespace UAVBrainLinkTool
             return true;
         }
 
-        private static Boolean updateThresholdSeries(double newLatestTime)
+        public static Boolean updateThresholdSeries(double newLatestTime)
         {
             FunctionSeries thresholdLine = EmotionPlotData.Find(x => String.Compare((String)x.Tag, Constants.thresholdTag) == 0);
-            thresholdLine.Points[0] = new DataPoint(newLatestTime - Plotting.plotTimeWindow, CommandProcessing.ActiveCommandThreshold);
-            thresholdLine.Points[1] = new DataPoint(newLatestTime, CommandProcessing.ActiveCommandThreshold);
+            double firstPoint  = (newLatestTime > Plotting.plotTimeWindow) ? newLatestTime - Plotting.plotTimeWindow : 0;
+            double secondPoint = (newLatestTime > Plotting.plotTimeWindow) ? newLatestTime                           : Plotting.plotTimeWindow;
+
+            if (EmotionProcessing.IsStressed)
+            {
+                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
+                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
+            }
+            else
+            {
+                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.ActiveCommandThreshold);
+                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.ActiveCommandThreshold);
+            }
 
             return true;
         }

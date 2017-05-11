@@ -35,6 +35,7 @@ namespace UAVBrainLinkTool
         public const String configFieldUAVInfo = "uavInfo";
         public const String configFieldUserInfo = "userInfo";
         public const String configFieldCommandThresholds = "commandPower";
+        public const String configFieldStress = "stress";
 
         public const String configFieldScriptFileName = "scriptFileName";
 
@@ -53,6 +54,12 @@ namespace UAVBrainLinkTool
         public const String configFieldActiveCommandThreshold = "activeCommandThreshold";
         public const String configFieldInactiveCommandThreshold = "inactiveCommandThreshold";
         public const String configFieldCommandSentPowerPercentage = "commandSentPowerPercentage";
+        public const String configFieldSampleTimeWindow = "sampleTimeWindow";
+
+        public const String configFieldActiveStressThreshold = "activeStressThreshold";
+        public const String configFieldInactiveStressThreshold = "inactiveStressThreshold";
+        public const String configFieldStressFactor = "stressFactor";
+        public const String configFieldStressTimeWindow = "stressTimeWindow";
 
         // Command scripts
 

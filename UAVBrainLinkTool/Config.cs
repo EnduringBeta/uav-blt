@@ -128,6 +128,8 @@ namespace UAVBrainLinkTool
                 success = getUserInfo();
             if (success)
                 success = getCommandPower();
+            if (success)
+                success = getStress();
 
             if (success)
                 ConfigLoaded = true;
@@ -218,10 +220,29 @@ namespace UAVBrainLinkTool
                 CommandProcessing.ActiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldActiveCommandThreshold];
                 CommandProcessing.InactiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldInactiveCommandThreshold];
                 CommandProcessing.CommandSentPowerPercentage = (int)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldCommandSentPowerPercentage];
+                CommandProcessing.SampleTimeWindow = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldSampleTimeWindow];
             }
             catch (Exception ex)
             {
                 Logging.outputLine("Config read exception - command power: " + ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        private static Boolean getStress()
+        {
+            try
+            {
+                EmotionProcessing.ActiveStressThreshold = (Single)ConfigJSON[Constants.configFieldStress][Constants.configFieldActiveStressThreshold];
+                EmotionProcessing.InactiveStressThreshold = (Single)ConfigJSON[Constants.configFieldStress][Constants.configFieldInactiveStressThreshold];
+                EmotionProcessing.StressFactor = (Single)ConfigJSON[Constants.configFieldStress][Constants.configFieldStressFactor];
+                EmotionProcessing.StressTimeWindow = (Single)ConfigJSON[Constants.configFieldStress][Constants.configFieldStressTimeWindow];
+            }
+            catch (Exception ex)
+            {
+                Logging.outputLine("Config read exception - stress factor: " + ex.Message);
                 return false;
             }
 

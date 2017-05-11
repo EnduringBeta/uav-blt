@@ -24,19 +24,7 @@ namespace UAVBrainLinkTool
         public static Single ActiveCommandThreshold { get; set; }
         public static Single InactiveCommandThreshold { get; set; }
         public static int CommandSentPowerPercentage { get; set; }
-
-        private static Single sampleTimeWindow = 3; // Seconds
-        public static Single SampleTimeWindow
-        {
-            get
-            {
-                return sampleTimeWindow;
-            }
-            private set
-            {
-                sampleTimeWindow = value;
-            }
-        }
+        public static Single SampleTimeWindow { get; set; } // Seconds
 
         private static List<CommandObject> commandObjectList = new List<CommandObject>();
         public static List<CommandObject> CommandObjectList
@@ -151,10 +139,20 @@ namespace UAVBrainLinkTool
 
             private Boolean updateExceedsThreshold()
             {
-                if (power < InactiveCommandThreshold)
-                    exceedsThreshold = false;
-                else if (power > ActiveCommandThreshold)
-                    exceedsThreshold = true;
+                if (EmotionProcessing.IsStressed)
+                {
+                    if      (power < (InactiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent))))
+                        exceedsThreshold = false;
+                    else if (power > (ActiveCommandThreshold   * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent))))
+                        exceedsThreshold = true;
+                }
+                else
+                {
+                    if      (power < InactiveCommandThreshold)
+                        exceedsThreshold = false;
+                    else if (power > ActiveCommandThreshold)
+                        exceedsThreshold = true;
+                }
 
                 return true;
             }

@@ -18,6 +18,40 @@ namespace UAVBrainLinkTool
                 handler(null, new PropertyChangedEventArgs(propertyName));
         }
 
+        // Set in config file
+        public static double ActiveStressThreshold { get; set; }
+        public static double InactiveStressThreshold { get; set; }
+        public static double StressFactor { get; set; }
+        public static Single StressTimeWindow { get; set; } // Seconds
+
+        private static Boolean isStressed = false;
+        public static Boolean IsStressed
+        {
+            get
+            {
+                return isStressed;
+            }
+            set
+            {
+                isStressed = value;
+                OnStaticPropertyChanged("IsStressed");
+            }
+        }
+
+        private static double stressLevel = 0.0;
+        public static double StressLevel
+        {
+            get
+            {
+                return stressLevel;
+            }
+            set
+            {
+                stressLevel = value;
+                OnStaticPropertyChanged("StressFactor");
+            }
+        }
+
         // From "AverageBandPowers" C# example project
 
         /* EEG and system data channel description
@@ -83,7 +117,7 @@ namespace UAVBrainLinkTool
 
             public EmotionDataPoint()
             {
-
+                ;
             }
 
             public EmotionDataPoint(double inputTheta, double inputAlpha, double inputLowBeta, double inputHighBeta, double inputGamma)
@@ -96,14 +130,40 @@ namespace UAVBrainLinkTool
             }
         }
 
-        // TODO: Process data to determine if stressed state is active, then add to plot data
+        // Process data to determine if stressed state is active, then add to plot data
         public static Boolean addNewSample(EmotionDataPoint dp, float latestSampleTime)
         {
-            // TODO: Check if stressed
+            updateStressFactor(dp);
 
             // Update UI plot for appropriate command
-            //EmotionPlotting.addPlotData(dp, latestSampleTime);
             EmotionPlotting.addHeatData(dp, latestSampleTime);
+
+            return true;
+        }
+
+        // Update stress status with new data
+        private static Boolean updateStressFactor(EmotionDataPoint dp)
+        {
+            // TODO: Implement algorithm to accumulate stress
+            StressLevel = 0.0;
+
+            updateExceedsThreshold();
+
+            return true;
+        }
+
+        private static Boolean updateExceedsThreshold()
+        {
+            if (IsStressed && (StressLevel < ActiveStressThreshold))
+            {
+                IsStressed = false;
+                CommandPlotting.updateThresholdSeries(CommandProcessing.LatestSampleTime);
+            }
+            else if (!IsStressed && (StressLevel > InactiveStressThreshold))
+            {
+                IsStressed = true;
+                CommandPlotting.updateThresholdSeries(CommandProcessing.LatestSampleTime);
+            }
 
             return true;
         }

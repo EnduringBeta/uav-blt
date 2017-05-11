@@ -136,6 +136,19 @@ namespace UAVBrainLinkTool
             }
         }
 
+        // TODO: Update status bar
+        private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommandComms.IsDeviceConnected)
+            {
+                CommandComms.disconnectUAV();
+            }
+            else
+            {
+                CommandComms.connectUAV();
+            }
+        }
+
         private void ButtonTransmit_Click(object sender, RoutedEventArgs e)
         {
             if (CommandComms.IsTransmitting)
@@ -157,19 +170,6 @@ namespace UAVBrainLinkTool
             else
             {
                 CommandProcessing.MonitorStress = true;
-            }
-        }
-
-        // TODO: Update status bar
-        private void ButtonConnectUAV_Click(object sender, RoutedEventArgs e)
-        {
-            if (CommandComms.IsDeviceConnected)
-            {
-                CommandComms.disconnectUAV();
-            }
-            else
-            {
-                CommandComms.connectUAV();
             }
         }
     }
