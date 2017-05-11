@@ -15,7 +15,7 @@ namespace UAVBrainLinkTool
         // Initialize both plots
         static public Boolean init()
         {
-            return CommandPlotting.initPlot() && EmotionPlotting.initPlot();
+            return CommandPlotting.initPlot() && EmotionPlotting.initHeatPlot();
         }
     }
 }

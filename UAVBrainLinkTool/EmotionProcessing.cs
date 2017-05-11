@@ -75,8 +75,8 @@ namespace UAVBrainLinkTool
 
         public class EmotionDataPoint
         {
-            public double[] theta      = new double[1] { 0.0 }; // Theta band value     (4-8 Hz)
-            public double[] alpha      = new double[1] { 0.0 }; // Alpha band value     (8-12 Hz)
+            public double[] theta      = new double[1] { 0.0 }; // Theta band value     ( 4- 8 Hz)
+            public double[] alpha      = new double[1] { 0.0 }; // Alpha band value     ( 8-12 Hz)
             public double[] lowBeta    = new double[1] { 0.0 }; // Low-beta value       (12-16 Hz)
             public double[] highBeta   = new double[1] { 0.0 }; // High-beta value      (16-25 Hz)
             public double[] gamma      = new double[1] { 0.0 }; // Gamma value          (25-45 Hz)
@@ -102,7 +102,8 @@ namespace UAVBrainLinkTool
             // TODO: Check if stressed
 
             // Update UI plot for appropriate command
-            EmotionPlotting.addPlotData(dp, latestSampleTime);
+            //EmotionPlotting.addPlotData(dp, latestSampleTime);
+            EmotionPlotting.addHeatData(dp, latestSampleTime);
 
             return true;
         }

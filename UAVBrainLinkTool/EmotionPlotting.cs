@@ -11,15 +11,155 @@ namespace UAVBrainLinkTool
 {
     public static class EmotionPlotting
     {
-        // TODO: Adjust
-        private static double emotionPlotRange = 500.0;
+        //private static double emotionPlotRange = 500.0;
+        private static double emotionHeatRange = 5;
+        private static int emotionHeatArrayLength = (int)(Plotting.plotTimeWindow / (EmotivDeviceComms.ListeningMillisecondInterval / Constants.millisecondsInSeconds));
+        private static double heatDataOffset = 1.0;
 
-        private static double latestDataPointTime = 0.0;
+        //private static double latestDataPointTime = 0.0;
+        private static int latestRawHeatIndex = 0;
+
+        private class HeatMapDataPoint
+        {
+            public int xIndex = 0;
+            public int yIndex = 0;
+            public double value = 0.0;
+
+            public HeatMapDataPoint()
+            {
+                ;
+            }
+
+            public HeatMapDataPoint(int inputX, int inpuxY, double inputValue)
+            {
+                xIndex = inputX;
+                yIndex = inpuxY;
+                value = inputValue;
+            }
+        }
+        private static HeatMapDataPoint highestValue = new HeatMapDataPoint();
 
         public static PlotModel EmotionPlotModel { get; private set; }
-        // List of data series to accomodate multiple simultaneous emotion data
-        public static List<FunctionSeries> EmotionPlotData { get; private set; }
 
+        public static HeatMapSeries EmotionHeatMapSeries;
+
+        // List of data series to accomodate multiple simultaneous emotion data
+        //public static List<FunctionSeries> EmotionPlotData { get; private set; }
+
+        // 2D array of data representing brain wave frequency range intensity over time
+        public static double[,] EmotionHeatData { get; private set; }
+
+        public static Boolean initHeatPlot()
+        {
+            EmotionPlotModel = new PlotModel { Title = "Brain Wave Spectrogram" };
+
+            // Set up axes
+            EmotionPlotModel.Axes.Add(new LinearColorAxis
+            {
+                Palette = OxyPalettes.Jet(100),
+                Title = "Intensity vs Frequency vs Time",
+            });
+
+            // Dimensions of 2D array of data:
+            // X: Plot window (s) / sampling period (s)
+            // Y: Emotion plot range
+            EmotionHeatData = new double[emotionHeatArrayLength, (int)emotionHeatRange];
+
+            // Fill array to be empty
+            for (int x = 0; x < EmotionHeatData.GetLength(0); x++)
+                for (int y = 0; y < EmotionHeatData.GetLength(1); y++)
+                    EmotionHeatData[x, y] = 0.0;
+
+            EmotionHeatMapSeries = new HeatMapSeries
+            {
+                X0 = 0,
+                X1 = Plotting.plotTimeWindow,
+                Y0 = 0,
+                Y1 = emotionHeatRange,
+                Interpolate = false,
+                RenderMethod = HeatMapRenderMethod.Rectangles,
+                Data = EmotionHeatData
+            };
+
+            EmotionPlotModel.Series.Add(EmotionHeatMapSeries);
+
+            return true;
+        }
+
+        public static Boolean addHeatData(EmotionProcessing.EmotionDataPoint fullDP, float newSampleTime)
+        {
+            // Calculate time the latest index represents
+            float latestIndexTime = latestRawHeatIndex * (EmotivDeviceComms.ListeningMillisecondInterval / Constants.millisecondsInSeconds);
+            // Calculate number of indexed entries to shift (if any)
+            int newIndexShift = (int)((newSampleTime - latestIndexTime) / (EmotivDeviceComms.ListeningMillisecondInterval / Constants.millisecondsInSeconds));
+
+            if (newIndexShift > 0)
+            {
+                // Adjust highest value and reset if removed
+                highestValue.xIndex -= newIndexShift;
+                if (highestValue.xIndex < 0)
+                    highestValue.value = 0.0;
+
+                // Record total shifts for future data point placement
+                latestRawHeatIndex += newIndexShift;
+
+                // If necessary, shift all data to the left to mark passage of time
+                if (latestRawHeatIndex >= emotionHeatArrayLength)
+                {
+                    int arrayWidth = EmotionHeatData.GetLength(0);
+                    int arrayHeight = EmotionHeatData.GetLength(1);
+
+                    // Shift data
+                    for (int x = newIndexShift; x < arrayWidth; x++)
+                        for (int y = 0; y < arrayHeight; y++)
+                            EmotionHeatData[x - newIndexShift, y] = EmotionHeatData[x, y];
+
+                    // Empty final columns
+                    for (int x = newIndexShift; x > 0; x--)
+                        for (int y = 0; y < arrayHeight; y++)
+                            EmotionHeatData[arrayWidth - x, y] = 0.0;
+                }
+            }
+
+            int dataInputIndex = (latestRawHeatIndex >= emotionHeatArrayLength) ? (emotionHeatArrayLength - 1) : latestRawHeatIndex;
+
+            EmotionHeatData[dataInputIndex, 0] += Math.Log10(fullDP.theta[0])    + heatDataOffset;   // Theta band value     ( 4- 8 Hz)
+            EmotionHeatData[dataInputIndex, 1] += Math.Log10(fullDP.alpha[0])    + heatDataOffset;   // Alpha band value     ( 8-12 Hz)
+            EmotionHeatData[dataInputIndex, 2] += Math.Log10(fullDP.lowBeta[0])  + heatDataOffset;   // Low-beta value       (12-16 Hz)
+            EmotionHeatData[dataInputIndex, 3] += Math.Log10(fullDP.highBeta[0]) + heatDataOffset;   // High-beta value      (16-25 Hz)
+            EmotionHeatData[dataInputIndex, 4] += Math.Log10(fullDP.gamma[0])    + heatDataOffset;   // Gamma value          (25-45 Hz)
+
+            // Need to track and artificially adjust highest value to keep heat map updating?
+            HeatMapDataPoint newHighestValue = new HeatMapDataPoint();
+
+            // Check if any values are higher than previous high
+            if (EmotionHeatData[dataInputIndex, 0] > newHighestValue.value)
+                newHighestValue = new HeatMapDataPoint(dataInputIndex, 0, EmotionHeatData[dataInputIndex, 0]);
+            if (EmotionHeatData[dataInputIndex, 1] > newHighestValue.value)
+                newHighestValue = new HeatMapDataPoint(dataInputIndex, 1, EmotionHeatData[dataInputIndex, 1]);
+            if (EmotionHeatData[dataInputIndex, 2] > newHighestValue.value)
+                newHighestValue = new HeatMapDataPoint(dataInputIndex, 2, EmotionHeatData[dataInputIndex, 2]);
+            if (EmotionHeatData[dataInputIndex, 3] > newHighestValue.value)
+                newHighestValue = new HeatMapDataPoint(dataInputIndex, 3, EmotionHeatData[dataInputIndex, 3]);
+            if (EmotionHeatData[dataInputIndex, 4] > newHighestValue.value)
+                newHighestValue = new HeatMapDataPoint(dataInputIndex, 4, EmotionHeatData[dataInputIndex, 4]);
+
+            if (newHighestValue.value > highestValue.value)
+                highestValue = newHighestValue;
+            else
+                ;//EmotionHeatData[highestValue.xIndex, highestValue.yIndex] += 0.01;
+
+            // Save latest timestamp
+            //latestDataPointTime = newSampleTime;
+
+            // Update plot
+            EmotionPlotModel.InvalidatePlot(true);
+
+            return true;
+        }
+
+        // TODO: Tooltip on this graph crashes program because of changing data
+        /*
         public static Boolean initPlot()
         {
             EmotionPlotModel = new PlotModel { Title = "Frequency Intensity Plot" };
@@ -47,12 +187,6 @@ namespace UAVBrainLinkTool
             yAxis.Title = "Frequency Intensity";
             EmotionPlotModel.Axes.Add(yAxis);
 
-            // TODO: Adjust and re-implement
-            // Create threshold line
-            //FunctionSeries thresholdLine = addDataSeries(Constants.thresholdTag);
-            //thresholdLine.Points.Add(new DataPoint(0.0, CommandProcessing.ActiveCommandThreshold));
-            //thresholdLine.Points.Add(new DataPoint(Plotting.plotTimeWindow, CommandProcessing.ActiveCommandThreshold));
-
             addDataSeries(Constants.alphaTag);
             addDataSeries(Constants.thetaTag);
             addDataSeries(Constants.lowBetaTag);
@@ -64,7 +198,9 @@ namespace UAVBrainLinkTool
 
             return true;
         }
+        */
 
+        /*
         private static FunctionSeries addDataSeries(String tag)
         {
             FunctionSeries newSeries = new FunctionSeries();
@@ -75,7 +211,9 @@ namespace UAVBrainLinkTool
 
             return newSeries;
         }
+        */
 
+        /*
         public static Boolean addPlotData(EmotionProcessing.EmotionDataPoint fullDP, float latestSampleTime)
         {
             // For each set of data tracking different brain wave frequency ranges
@@ -118,7 +256,9 @@ namespace UAVBrainLinkTool
 
             return true;
         }
+        */
 
+        /*
         private static Boolean removeOldData(double newLatestTime)
         {
             Boolean shouldPan = false;
@@ -152,7 +292,9 @@ namespace UAVBrainLinkTool
 
             return true;
         }
+        */
 
+        /*
         private static Boolean adjustPlotWindow(double newLatestTime)
         {
             double panAmount = EmotionPlotModel.DefaultXAxis.Transform(-(newLatestTime - latestDataPointTime) + EmotionPlotModel.DefaultXAxis.Offset);
@@ -160,6 +302,7 @@ namespace UAVBrainLinkTool
 
             return true;
         }
+        */
 
         /*
         private static Boolean updateThresholdSeries(double newLatestTime)
@@ -172,6 +315,7 @@ namespace UAVBrainLinkTool
         }
         */
 
+        /*
         private static OxyColor getSeriesColor(String tag)
         {
             switch (tag)
@@ -190,5 +334,6 @@ namespace UAVBrainLinkTool
                     return Constants.colorPlotDefault;
             }
         }
+        */
     }
 }

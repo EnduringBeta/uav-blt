@@ -14,10 +14,10 @@ namespace UAVBrainLinkTool
     public static class EmotivDeviceComms
     {
         static EmoEngine engine;
-        static System.Timers.Timer listenTimer = null;
+        static System.Timers.Timer listenCommandTimer = null;
+        static System.Timers.Timer listenEmotionTimer = null;
 
         const int commandPowerPrintingPeriod = 5; // Print cumulative command powers once per second
-        const Single listeningMillisecondInterval = 200; // Check for events 5 times per second
         const int eventMillisecondProcessingTime = 100;
 
         // http://stackoverflow.com/questions/34762879/static-binding-doesnt-update-when-resource-changes
@@ -27,6 +27,21 @@ namespace UAVBrainLinkTool
             var handler = StaticPropertyChanged;
             if (handler != null)
                 handler(null, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // Check for events 5 times per second
+        private static Single listeningMillisecondInterval = 200;
+        public static Single ListeningMillisecondInterval
+        {
+            get
+            {
+                return listeningMillisecondInterval;
+            }
+            private set
+            {
+                listeningMillisecondInterval = value;
+                OnStaticPropertyChanged("ListeningMillisecondInterval");
+            }
         }
 
         private static uint emotivUserID = 0;
@@ -183,15 +198,18 @@ namespace UAVBrainLinkTool
             ListeningMillisecondLength = millisecondLength;
             TotalListeningTicks = 0;
 
-            if (listenTimer == null)
-                setupTimer();
+            if (listenCommandTimer == null)
+                setupCommandTimer();
+            if (listenEmotionTimer == null)
+                setupEmotionTimer();
 
             IsListening = true;
             Logging.outputLine("Listening...");
 
             Logging.outputLine(String.Format("[Event]:\t\t{0,15}\t{1,10}\t{2,10}\t{3,8}", "[Command]", "[Power]", "[Seconds]", "[Active?]"));
 
-            listenTimer.Start();
+            listenCommandTimer.Start();
+            listenEmotionTimer.Start();
 
             return true;
         }
@@ -204,7 +222,8 @@ namespace UAVBrainLinkTool
                 return false;
             }
 
-            listenTimer.Stop();
+            listenCommandTimer.Stop();
+            listenEmotionTimer.Stop();
 
             IsListening = false;
             Logging.outputLine("Stopped listening");
@@ -214,17 +233,26 @@ namespace UAVBrainLinkTool
             return true;
         }
 
-        private static Boolean setupTimer()
+        private static Boolean setupCommandTimer()
         {
-            listenTimer = new System.Timers.Timer();
-            listenTimer.Elapsed += listenTimer_Elapsed;
-            listenTimer.Interval = listeningMillisecondInterval;
+            listenCommandTimer = new System.Timers.Timer();
+            listenCommandTimer.Elapsed += listenCommandTimer_Elapsed;
+            listenCommandTimer.Interval = ListeningMillisecondInterval;
 
             return true;
         }
 
-        // Periodically-executed function that processes Emotiv events
-        private static void listenTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private static Boolean setupEmotionTimer()
+        {
+            listenEmotionTimer = new System.Timers.Timer();
+            listenEmotionTimer.Elapsed += listenEmotionTimer_Elapsed;
+            listenEmotionTimer.Interval = ListeningMillisecondInterval;
+
+            return true;
+        }
+
+        // Periodically-executed function that processes Emotiv command events
+        private static void listenCommandTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             EventsProcessedThisInterval = 0;
 
@@ -232,7 +260,7 @@ namespace UAVBrainLinkTool
             engine.ProcessEvents(eventMillisecondProcessingTime);
 
             // Process averaged band powers for emotional/stressed state
-            processAverageBandPowers(CommandProcessing.LatestSampleTime);
+            //processAverageBandPowers(CommandProcessing.LatestSampleTime);
 
             // Increment counter tracking time
             TotalListeningTicks++;
@@ -240,9 +268,9 @@ namespace UAVBrainLinkTool
             // If no events were processed
             if (EventsProcessedThisInterval == 0)
             {
-                // Decay command power by listeningMillisecondInterval
+                // Decay command power by ListeningMillisecondInterval
                 CommandProcessing.updateCommandObjects(CommandProcessing.LatestSampleTime
-                    + (listeningMillisecondInterval / Constants.millisecondsInSeconds));
+                    + (ListeningMillisecondInterval / Constants.millisecondsInSeconds));
             }
 
             // Print out cumulative command powers occasionally
@@ -291,7 +319,19 @@ namespace UAVBrainLinkTool
 
             // If total listening time is set and has expired, stop
             if (ListeningMillisecondLength > 0 &&
-                TotalListeningTicks * listeningMillisecondInterval >= ListeningMillisecondLength)
+                TotalListeningTicks * ListeningMillisecondInterval >= ListeningMillisecondLength)
+                stopListening();
+        }
+
+        // Periodically-executed function that processes Emotiv command events
+        private static void listenEmotionTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Process averaged band powers for emotional/stressed state
+            processAverageBandPowers(CommandProcessing.LatestSampleTime);
+
+            // If total listening time is set and has expired, stop
+            if (ListeningMillisecondLength > 0 &&
+                TotalListeningTicks * ListeningMillisecondInterval >= ListeningMillisecondLength)
                 stopListening();
         }
 
