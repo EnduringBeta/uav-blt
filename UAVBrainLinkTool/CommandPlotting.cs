@@ -155,7 +155,7 @@ namespace UAVBrainLinkTool
             double firstPoint  = (newLatestTime > Plotting.plotTimeWindow) ? newLatestTime - Plotting.plotTimeWindow : 0;
             double secondPoint = (newLatestTime > Plotting.plotTimeWindow) ? newLatestTime                           : Plotting.plotTimeWindow;
 
-            if (EmotionProcessing.IsStressed)
+            if (EmotionProcessing.IsStressed && CommandProcessing.MonitorStress)
             {
                 thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
                 thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));

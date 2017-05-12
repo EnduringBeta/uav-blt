@@ -139,7 +139,7 @@ namespace UAVBrainLinkTool
 
             private Boolean updateExceedsThreshold()
             {
-                if (EmotionProcessing.IsStressed)
+                if (EmotionProcessing.IsStressed && CommandProcessing.MonitorStress)
                 {
                     if      (power < (InactiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent))))
                         exceedsThreshold = false;
