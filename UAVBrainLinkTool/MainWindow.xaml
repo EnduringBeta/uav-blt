@@ -38,7 +38,7 @@
                 IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click" ToolTip="Toggle sending commands to connected UAV"/>
             <Button x:Name="ButtonMonitorStress" FontSize="20" Height="50" Width="160" Margin="5"
                 Content="{Binding Path=(local:CommandProcessing.MonitorStress), Converter={StaticResource boolToMonitorStressTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonMonitorStress_Click" ToolTip="Toggle to monitor stressful state"/>
+                IsEnabled="False" Click="ButtonMonitorStress_Click" ToolTip="Toggle to monitor stressful state"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="5">
             <oxy:PlotView Model="{Binding Path=(local:EmotionPlotting.EmotionPlotModel)}" Height="230" Width="597" HorizontalAlignment="Left" Margin="0,5,5,5"/>
