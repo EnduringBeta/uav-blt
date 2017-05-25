@@ -55,8 +55,7 @@ namespace UAVBrainLinkTool
         public const String configFieldPassword = "password";
         public const String configFieldProfileName = "profileName";
 
-        public const String configFieldActiveCommandThreshold = "activeCommandThreshold";
-        public const String configFieldInactiveCommandThreshold = "inactiveCommandThreshold";
+        public const String configFieldCommandThreshold = "commandThreshold";
         public const String configFieldCommandSentPowerPercentage = "commandSentPowerPercentage";
         public const String configFieldSampleTimeWindow = "sampleTimeWindow";
 

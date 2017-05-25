@@ -35,8 +35,7 @@
     },
     "commandPower": {
         "_commentCommandThresholds": "Asymmetrical power thresholds above and below (respectively) which the program considers a mental command active or inactive",
-        "activeCommandThreshold": 11,
-        "inactiveCommandThreshold": 9,
+        "commandThreshold": 11,
         "_commentCommandSentPowerPercentage": "The percentage of power a command is reduced to after being sent, to reduce spam",
         "commandSentPowerPercentage": 25,
         "_commentSampleTimeWindow": "The window in which past sent commands affect the total command power, in seconds (similar to decay rate)",

@@ -42,9 +42,9 @@ namespace UAVBrainLinkTool
             LinearAxis yAxis = new LinearAxis();
             yAxis.Position = AxisPosition.Left;
             yAxis.AbsoluteMinimum = -0.5;
-            yAxis.AbsoluteMaximum = CommandProcessing.ActiveCommandThreshold * thresholdViewMultiplier;
-            yAxis.MaximumRange = CommandProcessing.ActiveCommandThreshold * thresholdViewMultiplier + 0.5;
-            yAxis.MinimumRange = CommandProcessing.ActiveCommandThreshold * thresholdViewMultiplier + 0.5;
+            yAxis.AbsoluteMaximum = CommandProcessing.CommandThreshold * thresholdViewMultiplier;
+            yAxis.MaximumRange = CommandProcessing.CommandThreshold * thresholdViewMultiplier + 0.5;
+            yAxis.MinimumRange = CommandProcessing.CommandThreshold * thresholdViewMultiplier + 0.5;
             yAxis.IsPanEnabled = false;
             yAxis.IsZoomEnabled = false;
             yAxis.Title = "Command Power";
@@ -52,8 +52,8 @@ namespace UAVBrainLinkTool
 
             // Create threshold line
             FunctionSeries thresholdLine = addDataSeries(Constants.thresholdTag);
-            thresholdLine.Points.Add(new DataPoint(0.0, CommandProcessing.ActiveCommandThreshold));
-            thresholdLine.Points.Add(new DataPoint(Plotting.plotTimeWindow, CommandProcessing.ActiveCommandThreshold));
+            thresholdLine.Points.Add(new DataPoint(0.0, CommandProcessing.CommandThreshold));
+            thresholdLine.Points.Add(new DataPoint(Plotting.plotTimeWindow, CommandProcessing.CommandThreshold));
 
             return true;
         }
@@ -157,13 +157,13 @@ namespace UAVBrainLinkTool
 
             if (EmotionProcessing.IsStressed && CommandProcessing.MonitorStress)
             {
-                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
-                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.ActiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
+                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.CommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
+                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.CommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
             }
             else
             {
-                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.ActiveCommandThreshold);
-                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.ActiveCommandThreshold);
+                thresholdLine.Points[0] = new DataPoint(firstPoint,  CommandProcessing.CommandThreshold);
+                thresholdLine.Points[1] = new DataPoint(secondPoint, CommandProcessing.CommandThreshold);
             }
 
             return true;

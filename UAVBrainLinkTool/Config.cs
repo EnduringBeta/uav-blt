@@ -237,8 +237,7 @@ namespace UAVBrainLinkTool
         {
             try
             {
-                CommandProcessing.ActiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldActiveCommandThreshold];
-                CommandProcessing.InactiveCommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldInactiveCommandThreshold];
+                CommandProcessing.CommandThreshold = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldCommandThreshold];
                 CommandProcessing.CommandSentPowerPercentage = (int)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldCommandSentPowerPercentage];
                 CommandProcessing.SampleTimeWindow = (Single)ConfigJSON[Constants.configFieldCommandThresholds][Constants.configFieldSampleTimeWindow];
             }
