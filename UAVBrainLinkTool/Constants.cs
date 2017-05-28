@@ -55,8 +55,10 @@ namespace UAVBrainLinkTool
         public const String configFieldPassword = "password";
         public const String configFieldProfileName = "profileName";
 
-        public const String configFieldActiveCommandThreshold = "activeCommandThreshold";
-        public const String configFieldInactiveCommandThreshold = "inactiveCommandThreshold";
+        public const String configFieldCommandThresholdPush = "commandThresholdPUSH";
+        public const String configFieldCommandThresholdPull = "commandThresholdPULL";
+        public const String configFieldCommandThresholdLift = "commandThresholdLIFT";
+        public const String configFieldCommandThresholdDrop = "commandThresholdDROP";
         public const String configFieldCommandSentPowerPercentage = "commandSentPowerPercentage";
         public const String configFieldSampleTimeWindow = "sampleTimeWindow";
 
@@ -77,7 +79,10 @@ namespace UAVBrainLinkTool
         public const String cmdLift     = "MC_LIFT";
         public const String cmdDrop     = "MC_DROP";
 
-        public const String thresholdTag = "THRESHOLD";
+        public const String thresholdPushTag = "THRESHOLD_PUSH";
+        public const String thresholdPullTag = "THRESHOLD_PULL";
+        public const String thresholdLiftTag = "THRESHOLD_LIFT";
+        public const String thresholdDropTag = "THRESHOLD_DROP";
 
         // Emotion-specific data
 
@@ -116,14 +121,14 @@ namespace UAVBrainLinkTool
         public static OxyPlot.OxyColor colorPlotCmdLift     = OxyPlot.OxyColors.SkyBlue;
         public static OxyPlot.OxyColor colorPlotCmdDrop     = OxyPlot.OxyColors.SandyBrown;
         public static OxyPlot.OxyColor colorPlotCmdNeutral  = OxyPlot.OxyColors.Black;
-        public static OxyPlot.OxyColor colorPlotThreshold   = OxyPlot.OxyColors.Gray;
+        //public static OxyPlot.OxyColor colorPlotThreshold   = OxyPlot.OxyColors.Gray;
         public static OxyPlot.OxyColor colorPlotDefault     = OxyPlot.OxyColors.Black;
 
-        public static OxyPlot.OxyColor colorPlotEmoTheta    = OxyPlot.OxyColors.DarkRed;
-        public static OxyPlot.OxyColor colorPlotEmoAlpha    = OxyPlot.OxyColors.LightGoldenrodYellow;
-        public static OxyPlot.OxyColor colorPlotEmoLowBeta  = OxyPlot.OxyColors.LightGreen;
-        public static OxyPlot.OxyColor colorPlotEmoHighBeta = OxyPlot.OxyColors.CadetBlue;
-        public static OxyPlot.OxyColor colorPlotEmoGamma    = OxyPlot.OxyColors.MediumPurple;
+        //public static OxyPlot.OxyColor colorPlotEmoTheta    = OxyPlot.OxyColors.DarkRed;
+        //public static OxyPlot.OxyColor colorPlotEmoAlpha    = OxyPlot.OxyColors.LightGoldenrodYellow;
+        //public static OxyPlot.OxyColor colorPlotEmoLowBeta  = OxyPlot.OxyColors.LightGreen;
+        //public static OxyPlot.OxyColor colorPlotEmoHighBeta = OxyPlot.OxyColors.CadetBlue;
+        //public static OxyPlot.OxyColor colorPlotEmoGamma    = OxyPlot.OxyColors.MediumPurple;
 
         // Button colors (properties for XAML)
 

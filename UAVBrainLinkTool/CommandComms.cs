@@ -271,6 +271,7 @@ namespace UAVBrainLinkTool
 
             cmdObj.isActive = true;
 
+            // Execute command
             if (sendPythonString(getCommandScriptString(commandString), commandString))
             {
                 Logging.outputLine(String.Format("Sent Command:\t{0,15}\t{1,10:N2}\t\t\t\t\t\t\t!", commandString, commandPower));

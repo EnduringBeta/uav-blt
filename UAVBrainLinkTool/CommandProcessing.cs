@@ -21,8 +21,10 @@ namespace UAVBrainLinkTool
         }
 
         // Set in config file
-        public static Single ActiveCommandThreshold { get; set; }
-        public static Single InactiveCommandThreshold { get; set; }
+        public static Single CommandThresholdPush { get; set; }
+        public static Single CommandThresholdPull { get; set; }
+        public static Single CommandThresholdLift { get; set; }
+        public static Single CommandThresholdDrop { get; set; }
         public static int CommandSentPowerPercentage { get; set; }
         public static Single SampleTimeWindow { get; set; } // Seconds
 
@@ -70,14 +72,16 @@ namespace UAVBrainLinkTool
         {
             public EdkDll.IEE_MentalCommandAction_t command;
             public Single power = 0;
+            public Single threshold = 0; // Each command can have a different threshold
             public Single latestSample = 0;
             public Boolean exceedsThreshold = false;
 
-            public CommandObject(EdkDll.IEE_MentalCommandAction_t inputCommand, Single inputPower = 0, Single inputLatestSample = 0, Boolean inputExceedsThreshold = false)
+            public CommandObject(EdkDll.IEE_MentalCommandAction_t inputCommand, Single inputPower = 0, Single inputThreshold = 0, Single inputLatestSample = 0, Boolean inputExceedsThreshold = false)
             {
                 command = inputCommand;
 
                 power = inputPower;
+                threshold = inputThreshold;
                 latestSample = inputLatestSample;
                 exceedsThreshold = inputExceedsThreshold;
             }
@@ -139,19 +143,20 @@ namespace UAVBrainLinkTool
 
             private Boolean updateExceedsThreshold()
             {
+                // If threshold is 0, command will never be active
+                if (threshold == 0)
+                {
+                    exceedsThreshold = false;
+                    return true;
+                }
+
                 if (EmotionProcessing.IsStressed && CommandProcessing.MonitorStress)
                 {
-                    if      (power < (InactiveCommandThreshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent))))
-                        exceedsThreshold = false;
-                    else if (power > (ActiveCommandThreshold   * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent))))
-                        exceedsThreshold = true;
+                    exceedsThreshold = power > (threshold * (1 + (EmotionProcessing.StressFactor / Constants.maxPercent)));
                 }
                 else
                 {
-                    if      (power < InactiveCommandThreshold)
-                        exceedsThreshold = false;
-                    else if (power > ActiveCommandThreshold)
-                        exceedsThreshold = true;
+                    exceedsThreshold = power > threshold;
                 }
 
                 return true;
@@ -192,8 +197,31 @@ namespace UAVBrainLinkTool
 
                 // If command object is new and not empty
                 if (!foundCommand)
+                {
+                    // Find appropriate threshold to initialize object
+                    Single threshold = 0;
+                    switch (cogAction.ToString())
+                    {
+                        case Constants.cmdPush:
+                            threshold = CommandProcessing.CommandThresholdPush;
+                            break;
+                        case Constants.cmdPull:
+                            threshold = CommandProcessing.CommandThresholdPull;
+                            break;
+                        case Constants.cmdLift:
+                            threshold = CommandProcessing.CommandThresholdLift;
+                            break;
+                        case Constants.cmdDrop:
+                            threshold = CommandProcessing.CommandThresholdDrop;
+                            break;
+                        default:
+                            threshold = 0;
+                            break;
+                    }
+
                     // "exceedsThreshold" from device used differently than "exceedsThreshold" in this program
-                    CommandObjectList.Add(new CommandObject(cogAction, power, timeFromStart));
+                    CommandObjectList.Add(new CommandObject(cogAction, power, threshold, timeFromStart));
+                }
             }
 
             // Always update LatestSampleTime after processing
