@@ -25,7 +25,8 @@ namespace UAVBrainLinkTool
     {
         public MainWindow()
         {
-            Utils.ProgramLoaded = false;
+            Utils.EmotivReady = false;
+            Utils.UAVScriptReady = false;
 
             // Load config file first for necessary plot info
             if (Config.importConfig())
@@ -46,8 +47,7 @@ namespace UAVBrainLinkTool
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            if (Utils.initAll())
-                Utils.ProgramLoaded = true;
+            Utils.initAll();
         }
 
         private Boolean setDetailedWindowTitle()

@@ -29,10 +29,10 @@
         <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Center">
             <Button x:Name="ButtonListen" FontSize="20" Height="50" Width="160" IsDefault="True" Margin="5"
                 Content="{Binding Path=(local:EmotivDeviceComms.IsListening), Converter={StaticResource boolToListeningTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonListen_Click" ToolTip="Toggle listening and processing Emotiv EEG events"/>
+                IsEnabled="{Binding Path=(local:Utils.EmotivReady)}" Click="ButtonListen_Click" ToolTip="Toggle listening and processing Emotiv EEG events"/>
             <Button x:Name="ButtonConnectUAV" FontSize="20" Height="50" Width="160" Margin="5"
                 Content="{Binding Path=(local:CommandComms.IsDeviceConnected), Converter={StaticResource boolToConnectUAVTextConverter}}"
-                IsEnabled="{Binding Path=(local:Utils.ProgramLoaded)}" Click="ButtonConnectUAV_Click" ToolTip="Toggle connection to UAV"/>
+                IsEnabled="{Binding Path=(local:Utils.UAVScriptReady)}" Click="ButtonConnectUAV_Click" ToolTip="Toggle connection to UAV"/>
             <Button x:Name="ButtonTransmit" FontSize="20" Height="50" Width="160" Margin="5"
                 Content="{Binding Path=(local:CommandComms.IsTransmitting), Converter={StaticResource boolToTransmittingTextConverter}}"
                 IsEnabled="{Binding Path=(local:Utils.EnableTransmit)}" Click="ButtonTransmit_Click" ToolTip="Toggle sending commands to connected UAV"/>

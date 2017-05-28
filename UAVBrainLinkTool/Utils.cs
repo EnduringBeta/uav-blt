@@ -46,17 +46,31 @@ namespace UAVBrainLinkTool
             }
         }
 
-        private static Boolean programLoaded = false;
-        public static Boolean ProgramLoaded
+        private static Boolean emotivReady = false;
+        public static Boolean EmotivReady
         {
             get
             {
-                return programLoaded;
+                return emotivReady;
             }
             set
             {
-                programLoaded = value;
-                OnStaticPropertyChanged("ProgramLoaded");
+                emotivReady = value;
+                OnStaticPropertyChanged("EmotivReady");
+            }
+        }
+
+        private static Boolean uavScriptReady = false;
+        public static Boolean UAVScriptReady
+        {
+            get
+            {
+                return uavScriptReady;
+            }
+            set
+            {
+                uavScriptReady = value;
+                OnStaticPropertyChanged("UAVScriptReady");
             }
         }
 
@@ -108,22 +122,29 @@ namespace UAVBrainLinkTool
 
             if (success)
             {
-                updateStatusBarText("Starting UAV command script...");
-                success = CommandComms.initCommandComms();
-            }
-
-            if (success)
-            {
                 updateStatusBarText("Connecting to Emotiv server and device...");
                 success = initEmotivServer();
             }
 
             if (success)
+            {
                 updateStatusBarText("BLT initialized!");
-            else
-                updateStatusBarText("Error: failure during initialization!");
+                EmotivReady = true;
+            }
 
-            return success;
+            updateStatusBarText("Starting UAV command script...");
+            UAVScriptReady = CommandComms.initCommandComms();
+
+            if (!(EmotivReady && UAVScriptReady))
+            {
+                updateStatusBarText("Error: failure during initialization!");
+                return false;
+            }
+            else
+            {
+                updateStatusBarText("Initialization complete!");
+                return true;
+            }
         }
 
         public static Boolean initEmotivDevice()
