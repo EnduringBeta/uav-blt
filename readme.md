@@ -1,12 +1,16 @@
-# Unmanned Aerial Vehicle Brain Link Tool Instruction Manual
+# Unmanned Aerial Vehicle Brain Link Tool
 
-## Created by the Georgia Tech Research Institute
+Created by the Georgia Tech Research Institute
 
 The Unmanned Aerial Vehicle (UAV) Brain Link Tool (BLT) is a program developed by the Georgia Tech Research Institute (GTRI) to allow a user wearing an appropriately configured Emotiv electroencephalogram (EEG) device to send mental commands to and control a UAV.
 
-### Status (Last updated 13 April 2017)
+### Status
 
-This project is not supported or under active development. It is open sourced as an example of an innovative project with elements (UI, COTS software interfacing) that could be of use to those working in a similar space.
+This project is not supported or under active development as of 2017. It is open sourced as an example of an innovative project with elements (UI, COTS software interfacing) that could be of use to those working in a similar space or with the same hardware.
+
+## Device and Dependencies
+
+This software works with the Emotiv EPOC+ device on an [end-of-life'd SDK](https://github.com/Emotiv/community-sdk).
 
 ## User Interface
 
@@ -18,7 +22,7 @@ The UAV BLT runs in the window seen in the following image. Following sections d
 
 In the upper-left of the window, the “Mental Command Plot” tracks the cumulative power of mental commands as they approach the threshold to be sent to the device.
 
-A second graph will contain an upper threshold line for Stress that, when exceeded and listening, will send a Land command to the UAV. It will also contain a lower threshold line for Focus that, when subsumed and listening, will cause commands to not be sent.
+*A second graph was planned to contain an upper threshold line for Stress that, when exceeded and listening, would send a Land command to the UAV. It would also contain a lower threshold line for Focus that, when subsumed and listening, would cause commands to not be sent.*
 
 ### Listening Button
 
@@ -62,3 +66,7 @@ Using the “configBLT.json” file, the user may adjust the following parameter
 * Mental command power thresholds;
 * (Planned) Decay rate for accumulating commands;
 * (Planned) Emotion thresholds for Stress and Focus.
+
+## Example Video
+
+[![GTRI - UAV BLT Flight Test](http://img.youtube.com/vi/i9OUBcrSJ-A/0.jpg)](https://www.youtube.com/watch?v=i9OUBcrSJ-A "GTRI - UAV BLT Flight Test")
