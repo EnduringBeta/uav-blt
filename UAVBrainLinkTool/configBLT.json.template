@@ -29,8 +29,8 @@
     },
     "userInfo": {
         "_comment": "User information for obtaining profile information and logging into Emotiv",
-        "userName": "rossllewallyn",
-        "password": "Bxq^VX!nOv23",
+        "userName": "",
+        "password": "",
         "profileName": "My Profile"
     },
     "commandPower": {
