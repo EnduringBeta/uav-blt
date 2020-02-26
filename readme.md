@@ -2,7 +2,11 @@
 
 Created by the Georgia Tech Research Institute
 
+https://git.elsys.gtri.org/users/rllewallyn3/repos/uav-brain-link-tool/browse
+
 The Unmanned Aerial Vehicle (UAV) Brain Link Tool (BLT) is a program developed by the Georgia Tech Research Institute (GTRI) to allow a user wearing an appropriately configured Emotiv electroencephalogram (EEG) device to send mental commands to and control a UAV.
+
+Mind control of a flying device, even as just a prototype, has many impactful applications, but by exchanging the Python code for other actions, this program can aid in executing arbitrary code for virtually any purpose.
 
 ### Status
 
@@ -10,7 +14,7 @@ This project is not supported or under active development as of 2017. It is open
 
 ## Device and Dependencies
 
-This software works with the Emotiv EPOC+ device on an [end-of-life'd SDK](https://github.com/Emotiv/community-sdk).
+This software works with the Emotiv EPOC+ device on an [end-of-life'd SDK](https://github.com/Emotiv/community-sdk). Using the Emotiv device requires significant training using their software and a customized configuration tailored to you.
 
 ## User Interface
 
@@ -66,6 +70,12 @@ Using the “configBLT.json” file, the user may adjust the following parameter
 * Mental command power thresholds;
 * (Planned) Decay rate for accumulating commands;
 * (Planned) Emotion thresholds for Stress and Focus.
+
+## Building
+
+This project was build in Visual Studio using C#. Open the Solution file and build it! You will need the EOL'd SDK from Emotiv (shared in Device and Dependencies) referenced in the repo.
+
+It calls Python code to command a particular UAV, so you will likely need to create your own UAV command scripts modeled after what is in the repo.
 
 ## Example Video
 
