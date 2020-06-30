@@ -2,7 +2,7 @@
 
 Created by Ross Llewallyn
 
-https://git.elsys.gtri.org/users/rllewallyn3/repos/uav-brain-link-tool/browse
+https://github.com/EnduringBeta/uav-blt
 
 The Unmanned Aerial Vehicle (UAV) Brain Link Tool (BLT) is a program to allow a user wearing an appropriately configured Emotiv electroencephalogram (EEG) device to send mental commands to and control a UAV.
 
