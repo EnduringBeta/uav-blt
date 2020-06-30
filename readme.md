@@ -1,10 +1,10 @@
 # Unmanned Aerial Vehicle Brain Link Tool
 
-Created by the Georgia Tech Research Institute
+Created by Ross Llewallyn
 
 https://git.elsys.gtri.org/users/rllewallyn3/repos/uav-brain-link-tool/browse
 
-The Unmanned Aerial Vehicle (UAV) Brain Link Tool (BLT) is a program developed by the Georgia Tech Research Institute (GTRI) to allow a user wearing an appropriately configured Emotiv electroencephalogram (EEG) device to send mental commands to and control a UAV.
+The Unmanned Aerial Vehicle (UAV) Brain Link Tool (BLT) is a program to allow a user wearing an appropriately configured Emotiv electroencephalogram (EEG) device to send mental commands to and control a UAV.
 
 Mind control of a flying device, even as just a prototype, has many impactful applications, but by exchanging the Python code for other actions, this program can aid in executing arbitrary code for virtually any purpose.
 
